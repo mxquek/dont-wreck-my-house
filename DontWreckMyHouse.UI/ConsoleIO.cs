@@ -8,5 +8,6 @@ namespace DontWreckMyHouse.UI
 {
     public class ConsoleIO
     {
+
     }
 }
