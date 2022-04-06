@@ -30,42 +30,42 @@ namespace DontWreckMyHouse.UI
 
         public void RunAppLoop()
         {
-            string option = ""; //_View.GetMainMenuOption();
+            MainMenuOption option = _View.SelectMainMenuOption();
             bool running = true;
             while (running)
             {
                 switch (option)
                 {
-                    case "0":
+                    case MainMenuOption.Exit:
                         running = false;
                         break;
-                    case "1":
+                    case MainMenuOption.ViewReservationsForHost:
                         ViewReservationsForHost();
                         break;
-                    case "2":
+                    case MainMenuOption.MakeReservation:
                         MakeReservation();
                         break;
-                    case "3":
+                    case MainMenuOption.EditReservation:
                         EditReservation();
                         break;
-                    case "4":
+                    case MainMenuOption.CancelReservation:
                         CancelReservation();
                         break;
                 }
             }
         }
 
-        private void CancelReservation()
+        public void CancelReservation()
         {
             throw new NotImplementedException();
         }
 
-        private void EditReservation()
+        public void EditReservation()
         {
             throw new NotImplementedException();
         }
 
-        private void MakeReservation()
+        public void MakeReservation()
         {
             throw new NotImplementedException();
         }
