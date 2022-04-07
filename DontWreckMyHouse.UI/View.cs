@@ -28,7 +28,20 @@ namespace DontWreckMyHouse.UI
             string message = $"Select [0 - {max}]: ";
             return options[_IO.ReadInt(message, 0, max)];
         }
+        public SearchOption SelectSearchOption(string item)
+        {
+            DisplayHeader($"Search {item} Options");
+            SearchOption[] options = Enum.GetValues<SearchOption>();
+            int max = options.Length - 1;
+            for (int index = 0; index <= max; index++)
+            {
+                SearchOption option = options[index];
+                _IO.PrintLine($"{index}. {option.ToLabel()}");
+            }
 
+            string message = $"Select [0 - {max}]: ";
+            return options[_IO.ReadInt(message, 0, max)];
+        }
 
         //Display Methods
         public void DisplayHeader(string message)
@@ -37,5 +50,6 @@ namespace DontWreckMyHouse.UI
             _IO.PrintLine(message);
             _IO.PrintLine(new string('=', message.Length));
         }
+
     }
 }

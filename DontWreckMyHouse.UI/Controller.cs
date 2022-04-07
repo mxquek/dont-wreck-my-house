@@ -54,25 +54,36 @@ namespace DontWreckMyHouse.UI
                 }
             }
         }
-
+        public void ViewReservationsForHost()
+        {
+            SearchOption option = _View.SelectSearchOption("Host");
+            switch (option)
+            {
+                case SearchOption.Exit:
+                    return;
+                case SearchOption.SearchByEmail:
+                    //_HostService.FindByEmail();
+                    break;
+                case SearchOption.PickFromList:
+                    //HostService.FindByLastName();
+                    break;
+            }
+        }
+        public void MakeReservation()
+        {
+            throw new NotImplementedException();
+        }
+        public void EditReservation()
+        {
+            throw new NotImplementedException();
+        }
         public void CancelReservation()
         {
             throw new NotImplementedException();
         }
 
-        public void EditReservation()
-        {
-            throw new NotImplementedException();
-        }
+        
 
-        public void MakeReservation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ViewReservationsForHost()
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
