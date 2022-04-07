@@ -1,11 +1,14 @@
+using DontWreckMyHouse.Core.Models;
 using NUnit.Framework;
+using System;
 using System.IO;
 
 namespace DontWreckMyHouse.DAL.Tests
 {
     public class HostRepositoryTest
     {
-        const string DATA_DIRECTORY = "data";
+        static string CurrentDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        static string DATA_DIRECTORY = Path.Combine(CurrentDirectory, "data");
         const string SEED_DIRECTORY = "seed";
         const string SEED_FILE = "testHostSeed.csv";
         const string TEST_DIRECTORY = "test";
@@ -25,13 +28,17 @@ namespace DontWreckMyHouse.DAL.Tests
             }
             File.Copy(Seed_Path, Test_Path, true);
 
-            //hostRepository = new HostRepository(Test_Path, new HostFormatter());
+            //hostRepository = new HostRepository(Test_Path);
         }
 
         [Test]
-        public void Test1()
+        public void Deserialize_StringHost_ReturnsHost()
         {
-            Assert.Pass();
+            Host expected = new Host("GUID-####", "Doe", "JaneDoe@gmail.com", "(123) 123-4567", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
+            string stringHost = "GUID-####,Doe,JaneDoe@gmail.com,(123) 123-4567,1212 Everlane Rd,Buffalo,NY,14201,25,50";
+            Host actual = hostRepository.Deserialize(stringHost);
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }

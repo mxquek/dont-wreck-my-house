@@ -1,12 +1,8 @@
 ﻿using DontWreckMyHouse.Core.Models;
-using DontWreckMyHouse.DAL.Formatters;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DontWreckMyHouse.DAL.Tests
 {
@@ -20,10 +16,9 @@ namespace DontWreckMyHouse.DAL.Tests
         const string TEST_FILE = "testGuests.csv";
 
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
-        string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
+        static string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
 
-        GuestRepository guestRepository;
-        GuestFormatter guestFormatter;
+        GuestRepository guestRepository = new GuestRepository(Test_Path);
 
         [SetUp]
         public void Setup()
@@ -33,8 +28,6 @@ namespace DontWreckMyHouse.DAL.Tests
                 Directory.CreateDirectory(Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY));
             }
             File.Copy(Seed_Path, Test_Path, true);
-
-            guestRepository = new GuestRepository(Test_Path, new GuestFormatter());
         }
 
         [Test]
@@ -50,6 +43,16 @@ namespace DontWreckMyHouse.DAL.Tests
             Result<List<Guest>> actual = guestRepository.GetAll();
 
             Assert.AreEqual(expected.Data, actual.Data);
+        }
+
+        [Test]
+        public void Deserialize_StringGuest_ReturnsGuest()
+        {
+            Guest expected = new Guest(1, "John", "Smith", "JohnSmith@gmail.com", "(727) 123-4567", "TX");
+            string stringGuest = "1,John,Smith,JohnSmith@gmail.com,(727) 123-4567,TX";
+            Guest actual = guestRepository.Deserialize(stringGuest);
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }
