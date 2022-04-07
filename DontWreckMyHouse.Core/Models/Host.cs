@@ -12,18 +12,21 @@ namespace DontWreckMyHouse.Core.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
+        public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string PostalCode { get; set; }
         public decimal StandardRate { get; set; }
         public decimal WeekendRate { get; set; }
 
-        public Host(string id, string lastName, string email, string phoneNumber, string city, string state, string postalCode, decimal standardRate, decimal weekendRate)
+        public Host() { }
+        public Host(string id, string lastName, string email, string phoneNumber, string address, string city, string state, string postalCode, decimal standardRate, decimal weekendRate)
         {
             ID = id;
             LastName = lastName;
             Email = email;
             PhoneNumber = phoneNumber;
+            Address = address;
             City = city;
             State = state;
             PostalCode = postalCode;
@@ -47,7 +50,7 @@ namespace DontWreckMyHouse.Core.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(ID, LastName, Email, PhoneNumber, City, State, PostalCode);
+            return HashCode.Combine(ID, LastName, Email, PhoneNumber, Address, City, State, PostalCode);
         }
     }
 }

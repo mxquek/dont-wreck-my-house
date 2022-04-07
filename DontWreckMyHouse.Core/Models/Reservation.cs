@@ -8,7 +8,7 @@ namespace DontWreckMyHouse.Core.Models
 {
     public class Reservation
     {
-        public int Id { get; set; }
+        public int ID { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Guest Guest { get; set; }
@@ -38,9 +38,10 @@ namespace DontWreckMyHouse.Core.Models
             }
         }
 
+        public Reservation() { }
         public Reservation(int id, DateTime startDate, DateTime endDate, Guest guest, Host host)
         {
-            Id = id;
+            ID = id;
             StartDate = startDate;
             EndDate = endDate;
             Guest = guest;
