@@ -22,6 +22,17 @@ namespace DontWreckMyHouse.BLL.Tests
             Result<Host> actual = hostService.FindByEmail("JaneDoe@gmail.com");
 
             Assert.IsTrue(expected.Equals(actual.Data));
+            Assert.IsTrue(actual.Success);
+        }
+
+        [Test]
+        public void FindByEmail_NonexistentEmail_ReturnsNull()
+        {
+            Host expected = null;
+            Result<Host> actual = hostService.FindByEmail("lemonade@yahoo.com");
+
+            Assert.IsTrue(expected == actual.Data);
+            Assert.IsFalse(actual.Success);
         }
     }
 }

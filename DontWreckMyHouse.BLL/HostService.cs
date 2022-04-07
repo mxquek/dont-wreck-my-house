@@ -19,11 +19,14 @@ namespace DontWreckMyHouse.BLL
             if (result.Data == null)
             {
                 result.Success = false;
-                result.Message = "No host found with that email";
+                result.Message = $"No host found with email: {email}.";
             }
-
-            result.Success = true;
-            result.Message = $"Host with {email} found.";
+            else
+            {
+                result.Success = true;
+                result.Message = $"Host with {email} found.";
+            }
+            
             return result;
         }
     }
