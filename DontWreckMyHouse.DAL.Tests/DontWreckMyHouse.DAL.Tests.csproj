@@ -19,8 +19,4 @@
     <ProjectReference Include="..\DontWreckMyHouse.DAL\DontWreckMyHouse.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="data\" />
-  </ItemGroup>
-
 </Project>
