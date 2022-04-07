@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DontWreckMyHouse.Core.Interfaces;
+﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
-using DontWreckMyHouse.DAL.Formatters;
 
 namespace DontWreckMyHouse.DAL
 {
     public class GuestRepository : IGuestRepository
     {
         private string _Path;
-        private GuestFormatter _GuestFormatter;
 
-        public GuestRepository(string path, GuestFormatter guestFormatter)
+        public GuestRepository(string path)
         {
             _Path = path;
-            _GuestFormatter = guestFormatter;
         }
 
         public Result<List<Guest>> GetAll()
@@ -42,7 +34,7 @@ namespace DontWreckMyHouse.DAL
                     }
                     while (currentLine != null)
                     {
-                        Guest record = _GuestFormatter.Deserialize(currentLine.Trim());
+                        Guest record = Deserialize(currentLine.Trim());
                         result.Data.Add(record);
                         currentLine = sr.ReadLine();
                     }
@@ -54,6 +46,21 @@ namespace DontWreckMyHouse.DAL
             }
 
             result.Success = true;
+            return result;
+        }
+
+        public Guest Deserialize(string data)
+        {
+            Guest result = new Guest();
+
+            string[] fields = data.Split(",");
+            result.ID = int.Parse(fields[0]);
+            result.FirstName = fields[1];
+            result.LastName = fields[2];
+            result.Email = fields[3];
+            result.PhoneNumber = fields[4];
+            result.State = fields[5];
+
             return result;
         }
     }

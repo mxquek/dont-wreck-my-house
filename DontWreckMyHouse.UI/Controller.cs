@@ -30,10 +30,11 @@ namespace DontWreckMyHouse.UI
 
         public void RunAppLoop()
         {
-            MainMenuOption option = _View.SelectMainMenuOption();
+            MainMenuOption option;
             bool running = true;
             while (running)
             {
+                option = _View.SelectMainMenuOption();
                 switch (option)
                 {
                     case MainMenuOption.Exit:
