@@ -11,6 +11,20 @@ namespace DontWreckMyHouse.BLL
         {
             HostRepository = repo;
         }
-        
+        public Result<Host> FindByEmail(string email)
+        {
+            Result<List<Host>> hosts = HostRepository.GetAll();
+            Result<Host> result = new Result<Host>();
+            result.Data = hosts.Data.Where(host => host.Email == email).SingleOrDefault();
+            if (result.Data == null)
+            {
+                result.Success = false;
+                result.Message = "No host found with that email";
+            }
+
+            result.Success = true;
+            result.Message = $"Host with {email} found.";
+            return result;
+        }
     }
 }

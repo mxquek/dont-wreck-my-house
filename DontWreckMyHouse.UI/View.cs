@@ -43,12 +43,29 @@ namespace DontWreckMyHouse.UI
             return options[_IO.ReadInt(message, 0, max)];
         }
 
+        public string GetEmail(string person)
+        {
+            return _IO.ReadString($"{person} Email:");
+        }
+
         //Display Methods
         public void DisplayHeader(string message)
         {
             _IO.PrintLine("");
             _IO.PrintLine(message);
             _IO.PrintLine(new string('=', message.Length));
+        }
+
+        public void DisplayStatus(bool success, string message)
+        {
+            if (success)
+            {
+                _IO.Success(message);
+            }
+            else
+            {
+                _IO.Error(message);
+            }
         }
 
     }

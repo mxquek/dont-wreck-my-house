@@ -1,4 +1,5 @@
 ﻿using DontWreckMyHouse.BLL;
+using DontWreckMyHouse.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,12 +59,14 @@ namespace DontWreckMyHouse.UI
         public void ViewReservationsForHost()
         {
             SearchOption option = _View.SelectSearchOption("Host");
+            Result<Host> hostResult = new Result<Host>();
             switch (option)
             {
                 case SearchOption.Exit:
                     return;
                 case SearchOption.SearchByEmail:
-                    //_HostService.FindByEmail();
+                    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
+                    _View.DisplayStatus(hostResult.Success, hostResult.Message);
                     break;
                 case SearchOption.PickFromList:
                     //HostService.FindByLastName();
