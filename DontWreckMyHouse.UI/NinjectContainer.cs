@@ -7,6 +7,7 @@ using Ninject;
 using System.IO;
 using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.BLL;
+using DontWreckMyHouse.DAL;
 
 namespace DontWreckMyHouse.UI
 {
@@ -26,9 +27,9 @@ namespace DontWreckMyHouse.UI
             string hostFileDirectory = Path.Combine(projectDirectory, "data", "hosts.csv");
             string guestFileDirectory = Path.Combine(projectDirectory, "data", "guests.csv");
 
-            Kernel.Bind<IReservationRepository>().To<IReservationRepository>().WithConstructorArgument(reservationFileDirectory);
-            Kernel.Bind<IHostRepository>().To<IHostRepository>().WithConstructorArgument(hostFileDirectory);
-            Kernel.Bind<IGuestRepository>().To<IGuestRepository>().WithConstructorArgument(guestFileDirectory);
+            Kernel.Bind<IReservationRepository>().To<ReservationRepository>().WithConstructorArgument(reservationFileDirectory);
+            Kernel.Bind<IHostRepository>().To<HostRepository>().WithConstructorArgument(hostFileDirectory);
+            Kernel.Bind<IGuestRepository>().To<GuestRepository>().WithConstructorArgument(guestFileDirectory);
 
             Kernel.Bind<ReservationService>().To<ReservationService>();
             Kernel.Bind<HostService>().To<HostService>();
