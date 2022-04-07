@@ -23,9 +23,9 @@ namespace DontWreckMyHouse.UI
         }
         public void Run()
         {
-            //_View.DisplayHeader("Welcome to Dont Wreck My House!");
+            _View.DisplayHeader("Welcome to Dont Wreck My House!");
             RunAppLoop();
-            //_View.DisplayHeader("Exiting");
+            _View.DisplayHeader("Exiting");
         }
 
         public void RunAppLoop()
