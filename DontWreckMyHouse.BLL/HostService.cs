@@ -1,5 +1,6 @@
 ﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
+using System.Linq;
 
 namespace DontWreckMyHouse.BLL
 {
@@ -27,6 +28,16 @@ namespace DontWreckMyHouse.BLL
                 result.Message = $"Host with {email} found.";
             }
             
+            return result;
+        }
+
+        public Result<List<Host>> FindByLastName(string prefix)
+        {
+            Result<List<Host>> result = new Result<List<Host>>();
+            result.Data = HostRepository.GetAll().Data
+                    .Where(host => host.LastName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
             return result;
         }
     }

@@ -59,19 +59,39 @@ namespace DontWreckMyHouse.UI
         public void ViewReservationsForHost()
         {
             SearchOption option = _View.SelectSearchOption("Host");
-            Result<Host> hostResult = new Result<Host>();
+            Result<Host> hostResult;// = new Result<Host>();
             switch (option)
             {
                 case SearchOption.Exit:
                     return;
-                case SearchOption.SearchByEmail:
-                    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
-                    _View.DisplayStatus(hostResult.Success, hostResult.Message);
-                    break;
-                case SearchOption.PickFromList:
-                    //HostService.FindByLastName();
+                //case SearchOption.SearchByEmail:
+                //    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
+                //    _View.DisplayStatus(hostResult.Success, hostResult.Message);
+                //    break;
+                //case SearchOption.PickFromList:
+                //    _HostService.FindByLastName(_View.GetNamePrefix("Host"));
+                //    break;
+                default:
+                    hostResult = GetHost(option);
                     break;
             }
+        }
+
+        public Result<Host> GetHost(SearchOption option)
+        {
+            Result<Host> hostResult = new Result<Host>();
+            switch (option)
+            {
+                case SearchOption.SearchByEmail:
+                    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
+                    break;
+                case SearchOption.PickFromList:
+                    Result<List<Host>> hosts = _HostService.FindByLastName(_View.GetNamePrefix("Host"));
+                    hostResult = _View.ChooseHost(hosts.Data);
+                    break;
+            }
+            _View.DisplayStatus(hostResult.Success, hostResult.Message);
+            return hostResult;
         }
         public void MakeReservation()
         {
