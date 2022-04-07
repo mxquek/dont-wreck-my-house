@@ -15,9 +15,9 @@ namespace DontWreckMyHouse.DAL.Tests
         const string TEST_FILE = "testHosts.csv";
 
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
-        string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
+        static string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
 
-        HostRepository hostRepository;
+        HostRepository hostRepository = new HostRepository(Test_Path);
 
         [SetUp]
         public void Setup()
