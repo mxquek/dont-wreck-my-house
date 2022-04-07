@@ -38,7 +38,9 @@ namespace DontWreckMyHouse.Core.Models
             }
         }
 
-        public Reservation() { }
+        public Reservation() 
+        {
+        }
         public Reservation(int id, DateTime startDate, DateTime endDate, Guest guest, Host host)
         {
             ID = id;
@@ -46,6 +48,21 @@ namespace DontWreckMyHouse.Core.Models
             EndDate = endDate;
             Guest = guest;
             Host = host;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Reservation reservation &&
+                   ID == reservation.ID &&
+                   StartDate == reservation.StartDate &&
+                   EndDate == reservation.EndDate &&
+                   Guest.Equals(reservation.Guest) &&
+                   Host.Equals(reservation.Host) &&
+                   Total == reservation.Total;
+        }
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ID, StartDate, EndDate, Guest.ID, Host.ID, Total);
         }
     }
 }

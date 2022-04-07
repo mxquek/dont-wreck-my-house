@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using DontWreckMyHouse.Core.Models;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,7 @@ namespace DontWreckMyHouse.DAL.Tests
         [Test]
         public void Test1()
         {
-            Assert.Pass();
+
         }
     }
 }
