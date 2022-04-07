@@ -5,6 +5,49 @@ namespace DontWreckMyHouse.DAL
 {
     public class HostRepository : IHostRepository
     {
+        private string _Path;
+
+        public HostRepository(string path)
+        {
+            _Path = path;
+        }
+        public Result<List<Host>> GetAll()
+        {
+            Result<List<Host>> result = new Result<List<Host>>();
+            result.Data = new List<Host>();
+
+            if (!File.Exists(_Path))
+            {
+                result.Success = false;
+                return result;
+            }
+
+            try
+            {
+                using (StreamReader sr = new StreamReader(_Path))
+                {
+                    string currentLine = sr.ReadLine();
+                    if (currentLine != null)
+                    {
+                        currentLine = sr.ReadLine();
+                    }
+                    while (currentLine != null)
+                    {
+                        Host record = Deserialize(currentLine.Trim());
+                        result.Data.Add(record);
+                        currentLine = sr.ReadLine();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not read Hosts", ex);
+            }
+
+            result.Success = true;
+            return result;
+        }
+
         public Host Deserialize(string data)
         {
             Host result = new Host();
