@@ -32,45 +32,42 @@ namespace DontWreckMyHouse.DAL.Tests
             }
             File.Copy(Seed_Path, Test_Path, true);
 
-            //reservationRepository = new ReservationRepository(Test_Path);
+            reservationRepository = new ReservationRepository(Test_Path);
         }
 
-        Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
-        Host HOST = new Host("GUID-####", "Doe", "JaneDoe@gmail.com", "(123) 123-4567", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
+        //Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
+        //Host HOST = new Host("GUID-####", "Doe", "JaneDoe@gmail.com", "(123) 123-4567", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
 
-        //[Test]
-        //public void Deserialize_StringReservation_ReturnsReservation()
-        //{
-        //    Reservation expected = new Reservation();
-        //    expected.ID = 1;
-        //    expected.StartDate = DateTime.Now.AddDays(-1).Date;
-        //    expected.EndDate = DateTime.Now.Date;
-        //    expected.Guest = GUEST;
-        //    expected.Host = HOST;
+        [Test]
+        public void Deserialize_StringReservation_ReturnsReservation()
+        {
+            Reservation expected = new Reservation();
+            expected.ID = 1;
+            expected.StartDate = DateTime.Now.AddDays(-1).Date;
+            expected.EndDate = DateTime.Now.Date;
+            expected.GuestID = 1;
+            expected.Total = 100;
 
-        //    string stringReservation = $"{expected.ID},{expected.StartDate:yyyy-MM-dd},{expected.EndDate:yyyy-MM-dd},{expected.Guest.ID},{expected.Total}";
-        //    Reservation actual = reservationFormatter.Deserialize(stringReservation);
+            string stringReservation = $"{expected.ID},{expected.StartDate:yyyy-MM-dd},{expected.EndDate:yyyy-MM-dd},{expected.GuestID},{expected.Total}";
+            Reservation actual = reservationRepository.Deserialize(stringReservation);
 
-        //    Assert.AreEqual(expected, actual);
-        //}
+            Assert.AreEqual(expected, actual);
+        }
 
-        //[Test]
-        //public void Serialize_Reservation_ReturnsStringReservation()
-        //{
-        //    Reservation reservation = new Reservation();
-        //    reservation.ID = 1;
-        //    reservation.StartDate = DateTime.Now.AddDays(-1).Date;
-        //    reservation.EndDate = DateTime.Now.Date;
-        //    reservation.Guest = new Guest();
-        //    reservation.Guest = GUEST;
-        //    reservation.Host = HOST;
+        [Test]
+        public void Serialize_Reservation_ReturnsStringReservation()
+        {
+            Reservation reservation = new Reservation();
+            reservation.ID = 1;
+            reservation.StartDate = DateTime.Now.AddDays(-1).Date;
+            reservation.EndDate = DateTime.Now.Date;
+            reservation.GuestID = 1;
+            reservation.Total = 100;
 
+            string expected = $"{reservation.ID},{reservation.StartDate:yyyy-MM-dd},{reservation.EndDate:yyyy-MM-dd},{reservation.GuestID},{reservation.Total}";
+            string actual = reservationRepository.Serialize(reservation);
 
-        //    string expected = $"{reservation.ID},{reservation.StartDate:yyyy-MM-dd},{reservation.EndDate:yyyy-MM-dd},{reservation.Guest.ID},{reservation.Total}";
-        //    //string actual = reservationFormatter.Serialize(reservation);
-
-        //    //Assert.AreEqual(expected, actual);
-        //    Assert.IsTrue(true);
-        //}
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
