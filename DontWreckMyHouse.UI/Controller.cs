@@ -68,6 +68,8 @@ namespace DontWreckMyHouse.UI
                     hostResult = GetHost(option);
                     break;
             }
+
+
         }
 
         public Result<Host> GetHost(SearchOption option)

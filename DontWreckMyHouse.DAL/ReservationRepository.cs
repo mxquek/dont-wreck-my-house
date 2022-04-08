@@ -81,9 +81,22 @@ namespace DontWreckMyHouse.DAL
         }
         public void WriteToFile(List<Reservation> reservations, string hostID)
         {
+            string filePath = GetFilePath(hostID);
             try
             {
-                using StreamWriter streamWriter = new StreamWriter(GetFilePath(hostID));
+                if (!File.Exists(filePath))
+                {
+                    //referenced stack overflow
+                    using (FileStream fs = File.Create(filePath)) { }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Could not create new file", ex);
+            }
+            try
+            {
+                using StreamWriter streamWriter = new StreamWriter(filePath);
                 streamWriter.WriteLine(HEADER);
 
                 if(reservations == null)
