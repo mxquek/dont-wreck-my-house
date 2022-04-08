@@ -75,7 +75,10 @@ namespace DontWreckMyHouse.UI
 
             var targetReservations = reservations.Data.OrderBy(reservation => reservation.StartDate)
                                                     .Where(reservation => reservation.StartDate >= startingViewDate);
-
+            if(startingViewDate > DateTime.MinValue || targetReservations.Count() == 0)
+            {
+                _View.DisplayMessage($"{host} has no future reservations.");
+            }
             foreach (Reservation reservation in targetReservations)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);

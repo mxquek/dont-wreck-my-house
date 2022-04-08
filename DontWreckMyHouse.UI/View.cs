@@ -148,6 +148,10 @@ namespace DontWreckMyHouse.UI
             _IO.PrintLine(message);
             _IO.PrintLine(new string('=', message.Length));
         }
+        public void DisplayMessage(string message)
+        {
+            _IO.PrintLine(message);
+        }
 
         public void DisplayStatus(bool success, string message)
         {
