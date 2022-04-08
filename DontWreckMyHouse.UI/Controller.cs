@@ -72,8 +72,10 @@ namespace DontWreckMyHouse.UI
             Result<List<Reservation>> reservations = _ReservationService.GetReservationsByHostID(hostResult.Data.ID);
             foreach(Reservation reservation in reservations.Data)
             {
-                Guest guest = _GuestService.GetGuestByID(reservation.GuestID);
-                _View.DisplayReservation(reservation, guest);
+                Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
+                _View.DisplayStatus(guestResult.Success, guestResult.Message);
+                _View.DisplayHeader($"{hostResult.Data.City}, {hostResult.Data.State}");
+                _View.DisplayReservation(reservation, guestResult.Data);
             }
 
         }

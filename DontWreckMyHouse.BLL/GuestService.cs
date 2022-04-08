@@ -10,14 +10,27 @@ namespace DontWreckMyHouse.BLL
 {
     public class GuestService
     {
-        public IGuestRepository guestRepository;
+        public IGuestRepository GuestRepository;
         public GuestService(IGuestRepository repo)
         {
-            guestRepository = repo;
+            GuestRepository = repo;
         }
-        public Guest GetGuestByID(int guestID)
+        public Result<Guest> FindByID(int guestID)
         {
-            throw new NotImplementedException();
+            Result<List<Guest>> guests = GuestRepository.GetAll();
+            Result<Guest> result = new Result<Guest>();
+            result.Data = guests.Data.Where(guest => guest.ID == guestID).FirstOrDefault();
+            if(result.Data == null)
+            {
+                result.Success = false;
+                result.Message = $"No guest found with ID: {guestID}.";
+            }
+            else
+            {
+                result.Success = true;
+                //result.Message = $"Guest ID: {guestID} found.";
+            }
+            return result;
         }
     }
 }

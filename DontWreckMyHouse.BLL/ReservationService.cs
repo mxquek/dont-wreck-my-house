@@ -18,6 +18,10 @@ namespace DontWreckMyHouse.BLL
         public Result<List<Reservation>> GetReservationsByHostID(string hostID)
         {
             Result<List<Reservation>> result = ReservationRepository.GetReservationsByHostID(hostID);
+            if(result.Data == null)
+            {
+                return result;
+            }
             if(result.Data.Count <= 0)
             {
                 result.Success = false;
