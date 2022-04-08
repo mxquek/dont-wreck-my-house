@@ -116,8 +116,11 @@ namespace DontWreckMyHouse.UI
             switch (option)
             {
                 case SearchOption.SearchByEmail:
+                    guestResult = _GuestService.FindByEmail(_View.GetEmail("Guest"));
                     break;
                 case SearchOption.PickFromList:
+                    break;
+                case SearchOption.SearchByID:
                     break;
             }
             _View.DisplayStatus(guestResult.Success, guestResult.Message);
