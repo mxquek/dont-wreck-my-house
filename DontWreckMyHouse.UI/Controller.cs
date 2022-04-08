@@ -143,7 +143,17 @@ namespace DontWreckMyHouse.UI
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
             DateTime startDate = _View.GetFutureDate("Start Date");
             DateTime endDate = _View.GetFutureDate("Start Date");
+
             Reservation reservation = _ReservationService.Make(host, guest, startDate, endDate);
+            if(_View.ReservationConfirmation(reservation))
+            {
+                _ReservationService.Add(reservation);
+            }
+            else
+            {
+                return;
+            }
+
         }
         public void EditReservation()
         {

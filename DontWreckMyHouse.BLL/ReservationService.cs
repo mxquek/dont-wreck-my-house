@@ -101,5 +101,10 @@ namespace DontWreckMyHouse.BLL
                 result.Message = "Reservation period overlaps with existing reservation. Dates must be during available dates.";
             }
         }
+
+        public void Add(Reservation reservation)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

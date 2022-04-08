@@ -165,6 +165,12 @@ namespace DontWreckMyHouse.UI
             _IO.PrintLine($"ID: {reservation.ID:D2}, {reservation.StartDate:MM/dd/yyyy} - {reservation.EndDate:MM/dd/yyyy}," +
                             $"Guest: {guest.LastName}, {guest.FirstName}, Email: {guest.Email})");
         }
-
+        public bool ReservationConfirmation(Reservation reservation)
+        {
+            _IO.PrintLine($"Start: {reservation.StartDate:MM/dd/yyyy}");
+            _IO.PrintLine($"End: {reservation.StartDate:MM/dd/yyyy}");
+            _IO.PrintLine($"Total: {reservation.Total:C}");
+            return _IO.ReadBool("Is this okay? [y/n]");
+        }
     }
 }
