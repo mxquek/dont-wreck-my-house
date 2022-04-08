@@ -68,7 +68,13 @@ namespace DontWreckMyHouse.UI
                     hostResult = GetHost(option);
                     break;
             }
-
+            //foreach reservation
+            Result<List<Reservation>> reservations = _ReservationService.GetReservationsByHostID(hostResult.Data.ID);
+            foreach(Reservation reservation in reservations.Data)
+            {
+                Guest guest = _GuestService.GetGuestByID(reservation.GuestID);
+                _View.DisplayReservation(reservation, guest);
+            }
 
         }
 
