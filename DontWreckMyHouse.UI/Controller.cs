@@ -74,7 +74,7 @@ namespace DontWreckMyHouse.UI
             _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
 
             var targetReservations = reservations.Data.OrderBy(reservation => reservation.StartDate)
-                                                    .Where(reservation => reservation.StartDate > startingViewDate);
+                                                    .Where(reservation => reservation.StartDate >= startingViewDate);
 
             foreach (Reservation reservation in targetReservations)
             {
@@ -142,7 +142,7 @@ namespace DontWreckMyHouse.UI
             ViewReservationsForHost(host,DateTime.Now);
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
             DateTime startDate = _View.GetFutureDate("Start Date");
-            DateTime endDate = _View.GetFutureDate("Start Date");
+            DateTime endDate = _View.GetFutureDate("End Date");
 
             Reservation reservation = _ReservationService.Make(host, guest, startDate, endDate);
             if(_View.ReservationConfirmation(reservation))

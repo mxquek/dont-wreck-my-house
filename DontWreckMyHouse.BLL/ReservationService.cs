@@ -34,15 +34,24 @@ namespace DontWreckMyHouse.BLL
         {
             Reservation reservation = new Reservation();
             Validate(host, guest, startDate, endDate);
+            reservation.ID = GetNextReservationID(host.ID);
+            reservation.StartDate = startDate;
+            reservation.EndDate = endDate;
             reservation.Total = CalculateTotal(host, startDate, endDate);
             return reservation;
+        }
+
+        private int GetNextReservationID(string hostID)
+        {
+            Result<List<Reservation>> reservations = ReservationRepository.GetReservationsByHostID(hostID);
+            return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
 
         private decimal CalculateTotal(Host host, DateTime startDate, DateTime endDate)
         {
             decimal total = 0;
-
-            for (DateTime d = startDate; d <= endDate; d.AddDays(1))
+            DateTime d = startDate;
+            for (; d <= endDate; d = d.AddDays(1))
             {
                 if (d.DayOfWeek == DayOfWeek.Saturday || d.DayOfWeek == DayOfWeek.Sunday)
                 {
