@@ -42,7 +42,7 @@ namespace DontWreckMyHouse.UI
                         running = false;
                         break;
                     case MainMenuOption.ViewReservationsForHost:
-                        ViewReservationsForHost();
+                        ViewReservationsForHost(GetHost(GetSearchOption("Host")).Data,new DateTime());
                         break;
                     case MainMenuOption.MakeReservation:
                         MakeReservation();
@@ -56,33 +56,27 @@ namespace DontWreckMyHouse.UI
                 }
             }
         }
-        public void ViewReservationsForHost()
+        public void ViewReservationsForHost(Host host,DateTime startingViewDate)
         {
-            SearchOption option = _View.SelectSearchOption("Host");
-            Result<Host> hostResult;// = new Result<Host>();
-            switch (option)
-            {
-                case SearchOption.Exit:
-                    return;
-                default:
-                    hostResult = GetHost(option);
-                    break;
-            }
-            if(hostResult.Success == false)
+            if (host== null)
             {
                 return;
             }
 
             //foreach reservation
-            Result<List<Reservation>> reservations = _ReservationService.GetReservationsByHostID(hostResult.Data.ID);
+            Result<List<Reservation>> reservations = _ReservationService.GetReservationsByHostID(host.ID);
             if (reservations.Success == false)
             {
                 _View.DisplayStatus(reservations.Success, reservations.Message);
                 return;
             }
 
-            _View.DisplayHeader($"{hostResult.Data.City}, {hostResult.Data.State}");
-            foreach (Reservation reservation in reservations.Data)
+            _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
+
+            var targetReservations = reservations.Data.OrderBy(reservation => reservation.StartDate)
+                                                    .Where(reservation => reservation.StartDate > startingViewDate);
+
+            foreach (Reservation reservation in targetReservations)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
                 _View.DisplayStatus(guestResult.Success, guestResult.Message);
@@ -91,11 +85,21 @@ namespace DontWreckMyHouse.UI
 
         }
 
+        public SearchOption GetSearchOption(string person)
+        {
+            SearchOption option = _View.SelectSearchOption(person);
+            return option;
+        }
+
         public Result<Host> GetHost(SearchOption option)
         {
             Result<Host> hostResult = new Result<Host>();
             switch (option)
             {
+                case SearchOption.Exit:
+                    hostResult.Success = false;
+                    hostResult.Message = "Exiting Select Host Menu...";
+                    break;
                 case SearchOption.SearchByEmail:
                     hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
                     break;
@@ -115,6 +119,10 @@ namespace DontWreckMyHouse.UI
             Result<Guest> guestResult = new Result<Guest>();
             switch (option)
             {
+                case SearchOption.Exit:
+                    guestResult.Success = false;
+                    guestResult.Message = "Exiting Select Guest Menu...";
+                    break;
                 case SearchOption.SearchByEmail:
                     guestResult = _GuestService.FindByEmail(_View.GetEmail("Guest"));
                     break;
@@ -130,7 +138,12 @@ namespace DontWreckMyHouse.UI
         }
         public void MakeReservation()
         {
-            throw new NotImplementedException();
+            Host host = GetHost(GetSearchOption("Host")).Data;
+            ViewReservationsForHost(host,DateTime.Now);
+            Guest guest = GetGuest(GetSearchOption("Guest")).Data;
+
+            
+
         }
         public void EditReservation()
         {
