@@ -89,6 +89,43 @@ namespace DontWreckMyHouse.UI
             return result;
         }
 
+        public Result<Guest> ChooseGuest(List<Guest> guests)
+        {
+            Result<Guest> result = new Result<Guest>();
+
+            if(guests.Count == 0 || guests == null)
+            {
+                result.Success = false;
+                result.Message = "No guests found.";
+                return result;
+            }
+
+            int index = 1;
+            foreach(Guest guest in guests)
+            {
+                _IO.PrintLine($"{index++:D2}: {guest.FirstName} {guest.LastName} {guest.Email}");
+            }
+            index--;
+
+            if(guests.Count > 25)
+            {
+                _IO.PrintLine("More than 25 guests found. Showing first 25. Please refine your search.");
+            }
+            _IO.PrintLine("0. Exit");
+            string message = $"Select a guest by their index [0-{index}]: ";
+
+            index = _IO.ReadInt(message, 0, index);
+
+            if(index == 0)
+            {
+                result.Success = false;
+                result.Message = "Exiting Guest Selection...";
+            }
+            result.Data = guests[index - 1];
+            result.Success = true;
+            result.Message = $"Guest {result.Data.LastName} was chosen.";
+            return result;
+        }
         //Display Methods
         public void DisplayHeader(string message)
         {

@@ -119,6 +119,8 @@ namespace DontWreckMyHouse.UI
                     guestResult = _GuestService.FindByEmail(_View.GetEmail("Guest"));
                     break;
                 case SearchOption.PickFromList:
+                    Result<List<Guest>> guests = _GuestService.FindByLastName(_View.GetNamePrefix("Guest"));
+                    guestResult = _View.ChooseGuest(guests.Data);
                     break;
                 case SearchOption.SearchByID:
                     break;
