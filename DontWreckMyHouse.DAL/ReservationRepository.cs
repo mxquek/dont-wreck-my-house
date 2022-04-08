@@ -21,6 +21,8 @@ namespace DontWreckMyHouse.DAL
         public Result<List<Reservation>> GetReservationsByHostID(string HostID)
         {
             Result<List<Reservation>> result = new Result<List<Reservation>>();
+            result.Data = new List<Reservation>();
+
             string filePath = GetFilePath(HostID);
 
             if (!File.Exists(filePath))
@@ -55,6 +57,7 @@ namespace DontWreckMyHouse.DAL
                     throw new Exception("Could not read reservations.", ex);
                 }
             }
+            result.Data = result.Data.OrderBy(reservation => reservation.StartDate).ToList();
 
             return result;
         }
@@ -81,6 +84,7 @@ namespace DontWreckMyHouse.DAL
         }
         public void WriteToFile(List<Reservation> reservations, string hostID)
         {
+            reservations = reservations.OrderBy(reservation => reservation.ID).ToList();
             string filePath = GetFilePath(hostID);
             try
             {

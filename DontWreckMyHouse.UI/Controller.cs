@@ -81,11 +81,11 @@ namespace DontWreckMyHouse.UI
                 return;
             }
 
+            _View.DisplayHeader($"{hostResult.Data.City}, {hostResult.Data.State}");
             foreach (Reservation reservation in reservations.Data)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
                 _View.DisplayStatus(guestResult.Success, guestResult.Message);
-                _View.DisplayHeader($"{hostResult.Data.City}, {hostResult.Data.State}");
                 _View.DisplayReservation(reservation, guestResult.Data);
             }
 
