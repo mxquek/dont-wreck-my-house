@@ -105,10 +105,23 @@ namespace DontWreckMyHouse.UI
                     break;
             }
             
-
-                _View.DisplayStatus(hostResult.Success, hostResult.Message);
+            _View.DisplayStatus(hostResult.Success, hostResult.Message);
 
             return hostResult;
+        }
+
+        public Result<Guest> GetGuest(SearchOption option)
+        {
+            Result<Guest> guestResult = new Result<Guest>();
+            switch (option)
+            {
+                case SearchOption.SearchByEmail:
+                    break;
+                case SearchOption.PickFromList:
+                    break;
+            }
+            _View.DisplayStatus(guestResult.Success, guestResult.Message);
+            return guestResult;
         }
         public void MakeReservation()
         {
