@@ -20,6 +20,20 @@ namespace DontWreckMyHouse.Core.Models
         public decimal WeekendRate { get; set; }
 
         public Host() { }
+        public Host(Host copy) 
+        {
+            ID = copy.ID;
+            LastName = copy.LastName;
+            Email = copy.Email;
+            PhoneNumber = copy.PhoneNumber;
+            Address = copy.Address;
+            City = copy.City;
+            State = copy.State;
+            PostalCode = copy.PostalCode;
+            StandardRate = copy.StandardRate;
+            WeekendRate = copy.WeekendRate;
+        }
+
         public Host(string id, string lastName, string email, string phoneNumber, string address, string city, string state, string postalCode, decimal standardRate, decimal weekendRate)
         {
             ID = id;

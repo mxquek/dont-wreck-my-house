@@ -1,6 +1,7 @@
 using DontWreckMyHouse.Core.Models;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DontWreckMyHouse.DAL.Tests
@@ -17,7 +18,7 @@ namespace DontWreckMyHouse.DAL.Tests
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
         static string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
 
-        HostRepository hostRepository = new HostRepository(Test_Path);
+        HostRepository hostRepository;
 
         [SetUp]
         public void Setup()
@@ -28,7 +29,7 @@ namespace DontWreckMyHouse.DAL.Tests
             }
             File.Copy(Seed_Path, Test_Path, true);
 
-            //hostRepository = new HostRepository(Test_Path);
+            hostRepository = new HostRepository(Test_Path);
         }
 
         [Test]
@@ -39,6 +40,30 @@ namespace DontWreckMyHouse.DAL.Tests
             Host actual = hostRepository.Deserialize(stringHost);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetAll_ReturnsAllHosts()
+        {
+            List<Host> expected = new List<Host>();
+            expected.Add(new Host("GUID-###1","Doe","JaneDoe@gmail.com","(123) 123-1234","1212 Everlane Rd","Buffalo","NY","14201",25,50));
+            expected.Add(new Host("123-4ge23-sff43", "Well", "ChristinaWell@yahoo.com", "(222) 222-2222", "4444 Oceanside Ave", "Plano", "TX", "75252", 10, 20));
+            Result <List<Host>> actual = hostRepository.GetAll();
+            int max;
+
+            if(expected.Count < actual.Data.Count)
+            {
+                max = actual.Data.Count;
+            }
+            else
+            {
+                max = expected.Count;
+            }
+
+            for(int i = 0; i < max; i++)
+            {
+                Assert.IsTrue(expected[i].Equals(actual.Data[i]));
+            }
         }
     }
 }
