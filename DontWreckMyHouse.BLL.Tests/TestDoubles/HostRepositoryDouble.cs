@@ -17,6 +17,21 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
         const string TEST_DIRECTORY = "test";
         const string TEST_FILE = "testHosts.csv";
         private string _Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
+
+        const string SEED_DIRECTORY = "seed";
+        const string SEED_FILE = "testHostSeed.csv";
+
+        string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
+
+        public HostRepositoryDouble()
+        {
+            if (!Directory.Exists(TEST_DIRECTORY))
+            {
+                Directory.CreateDirectory(Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY));
+            }
+            File.Copy(Seed_Path, _Path, true);
+        }
+
         public Result<List<Host>> GetAll()
         {
             Result<List<Host>> result = new Result<List<Host>>();
