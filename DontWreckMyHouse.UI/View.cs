@@ -53,6 +53,21 @@ namespace DontWreckMyHouse.UI
             return _IO.ReadRequiredString($"{person} last name starts with: ");
         }
 
+        public DateTime GetFutureDate(string message)
+        {
+            DateTime result = new DateTime();
+            while (true)
+            {
+                result = _IO.ReadRequiredDate(message + " (MM/dd/yyyy): ");
+                if (result < DateTime.Now)
+                {
+                    _IO.Error("Date must be in the future.");
+                }
+                else { break; }
+            }
+            return result;
+        }
+
         public Result<Host> ChooseHost(List<Host> hosts)
         {
             Result<Host> result = new Result<Host>();

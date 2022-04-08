@@ -141,9 +141,9 @@ namespace DontWreckMyHouse.UI
             Host host = GetHost(GetSearchOption("Host")).Data;
             ViewReservationsForHost(host,DateTime.Now);
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
-
-            
-
+            DateTime startDate = _View.GetFutureDate("Start Date");
+            DateTime endDate = _View.GetFutureDate("Start Date");
+            _ReservationService.Add(host, guest, startDate, endDate);
         }
         public void EditReservation()
         {
