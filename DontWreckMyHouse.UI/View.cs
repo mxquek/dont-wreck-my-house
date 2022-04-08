@@ -59,7 +59,7 @@ namespace DontWreckMyHouse.UI
             if (hosts == null || hosts.Count == 0)
             {
                 _IO.Error("No hosts found");
-                return null;
+                return result;
             }
 
             int index = 1;

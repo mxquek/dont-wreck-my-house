@@ -68,9 +68,20 @@ namespace DontWreckMyHouse.UI
                     hostResult = GetHost(option);
                     break;
             }
+            if(hostResult.Success == false)
+            {
+                return;
+            }
+
             //foreach reservation
             Result<List<Reservation>> reservations = _ReservationService.GetReservationsByHostID(hostResult.Data.ID);
-            foreach(Reservation reservation in reservations.Data)
+            if (reservations.Success == false)
+            {
+                _View.DisplayStatus(reservations.Success, reservations.Message);
+                return;
+            }
+
+            foreach (Reservation reservation in reservations.Data)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
                 _View.DisplayStatus(guestResult.Success, guestResult.Message);
@@ -93,7 +104,10 @@ namespace DontWreckMyHouse.UI
                     hostResult = _View.ChooseHost(hosts.Data);
                     break;
             }
-            _View.DisplayStatus(hostResult.Success, hostResult.Message);
+            
+
+                _View.DisplayStatus(hostResult.Success, hostResult.Message);
+
             return hostResult;
         }
         public void MakeReservation()
