@@ -15,11 +15,11 @@ namespace DontWreckMyHouse.DAL.Tests
         static string DATA_DIRECTORY = Path.Combine(CurrentDirectory, "data");
         const string SEED_DIRECTORY = "seed";
         const string SEED_FILE = "testReservationSeed.csv";
-        const string TEST_DIRECTORY = "test";
+        static string TEST_DIRECTORY = Path.Combine(DATA_DIRECTORY,"test");
         const string TEST_FILE = "testReservations.csv";
 
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
-        string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
+        string Test_Path = Path.Combine(TEST_DIRECTORY, TEST_FILE);
 
         ReservationRepository reservationRepository;
 
@@ -28,11 +28,11 @@ namespace DontWreckMyHouse.DAL.Tests
         {
             if (!Directory.Exists(TEST_DIRECTORY))
             {
-                Directory.CreateDirectory(Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY));
+                Directory.CreateDirectory(TEST_DIRECTORY);
             }
             File.Copy(Seed_Path, Test_Path, true);
-
-            reservationRepository = new ReservationRepository(Test_Path);
+            
+            reservationRepository = new ReservationRepository(TEST_DIRECTORY);
         }
 
         //Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
@@ -68,6 +68,23 @@ namespace DontWreckMyHouse.DAL.Tests
             string actual = reservationRepository.Serialize(reservation);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void WriteToFile_GivenNonexistentFile_CreatesNewFile()
+        {
+            string expectedPath = Path.Combine(TEST_DIRECTORY, "NonExistentFile.csv");
+            if (File.Exists(expectedPath))
+            {
+                File.Delete(expectedPath);
+            }
+
+            reservationRepository.WriteToFile(new List<Reservation>(), "NonExistentFile");
+            Assert.IsTrue(File.Exists(expectedPath));
+            if (File.Exists(expectedPath))
+            {
+                File.Delete(expectedPath);
+            }
         }
     }
 }
