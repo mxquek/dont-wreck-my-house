@@ -64,13 +64,6 @@ namespace DontWreckMyHouse.UI
             {
                 case SearchOption.Exit:
                     return;
-                //case SearchOption.SearchByEmail:
-                //    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
-                //    _View.DisplayStatus(hostResult.Success, hostResult.Message);
-                //    break;
-                //case SearchOption.PickFromList:
-                //    _HostService.FindByLastName(_View.GetNamePrefix("Host"));
-                //    break;
                 default:
                     hostResult = GetHost(option);
                     break;
