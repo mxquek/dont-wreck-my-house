@@ -100,6 +100,7 @@ namespace DontWreckMyHouse.DAL
                 all.Data[targetIndex].Total = updatedReservation.Total;
                 result.Success = true;
                 result.Message = $"Reservation {updatedReservation.ID} updated.";
+                WriteToFile(all.Data, hostID);
             }
             return result;
         }

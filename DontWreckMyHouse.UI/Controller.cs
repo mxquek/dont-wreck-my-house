@@ -176,7 +176,7 @@ namespace DontWreckMyHouse.UI
             Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data, guest);
             DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
             DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
-            Result<Reservation> result = _ReservationService.Edit(oldReservation.Data, host.ID, newStartDate, newEndDate);
+            Result<Reservation> result = _ReservationService.Edit(oldReservation.Data, host, newStartDate, newEndDate);
             _View.DisplayStatus(result.Success, result.Message);
         }
         public void CancelReservation()

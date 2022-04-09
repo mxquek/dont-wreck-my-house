@@ -99,13 +99,14 @@ namespace DontWreckMyHouse.BLL
             }
         }
 
-        private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result)
+        private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result, int reservationID = 0)
         {
             Result < List < Reservation >> reservations = GetReservationsByHostID(hostID);
-            if (reservations.Data.Any(r => (startDate >= r.StartDate
+            if (reservations.Data.Any(r => ((startDate >= r.StartDate
                                         && startDate <= r.EndDate)
                                         || (endDate >= r.StartDate
-                                        && endDate <= r.EndDate)))
+                                        && endDate <= r.EndDate))
+                                        && r.ID != reservationID))
             {
                 result.Success = false;
                 result.Message = "Reservation period overlaps with existing reservation. Dates must be during available dates.";
@@ -146,7 +147,7 @@ namespace DontWreckMyHouse.BLL
                 updatedReservation.EndDate = (DateTime)newEndDate;
             }
 
-            ValidateReservationPeriod(host.ID, updatedReservation.StartDate, updatedReservation.EndDate, result);
+            ValidateReservationPeriod(host.ID, updatedReservation.StartDate, updatedReservation.EndDate, result, updatedReservation.ID);
             if(result.Success == false)
             {
                 return result;
