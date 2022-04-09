@@ -171,6 +171,7 @@ namespace DontWreckMyHouse.UI
         }
         public bool ReservationConfirmation(Reservation reservation)
         {
+            DisplayHeader("Summary");
             _IO.PrintLine($"Start: {reservation.StartDate:MM/dd/yyyy}");
             _IO.PrintLine($"End: {reservation.EndDate:MM/dd/yyyy}");
             _IO.PrintLine($"Total: {reservation.Total:C}");

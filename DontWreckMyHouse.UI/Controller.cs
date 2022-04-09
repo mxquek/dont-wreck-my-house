@@ -56,7 +56,7 @@ namespace DontWreckMyHouse.UI
                 }
             }
         }
-        public void ViewReservationsForHost(Host host,DateTime startingViewDate)
+        public void ViewReservationsForHost(Host host,DateTime startingViewDate, Guest guest = null)
         {
             if (host== null)
             {
@@ -75,6 +75,11 @@ namespace DontWreckMyHouse.UI
 
             var targetReservations = reservations.Data.OrderBy(reservation => reservation.StartDate)
                                                     .Where(reservation => reservation.StartDate >= startingViewDate);
+            if(guest != null)
+            {
+                targetReservations = targetReservations.Where(reservation => reservation.GuestID == guest.ID);
+            }
+
             if(startingViewDate > DateTime.MinValue || targetReservations.Count() == 0)
             {
                 _View.DisplayMessage($"{host.LastName} has no future reservations.");
@@ -162,7 +167,10 @@ namespace DontWreckMyHouse.UI
         }
         public void CancelReservation()
         {
-            throw new NotImplementedException();
+            Host host = GetHost(GetSearchOption("Host")).Data;
+            Guest guest = GetGuest(GetSearchOption("Guest")).Data;
+            ViewReservationsForHost(host, DateTime.Now, guest);
+            
         }
 
         
