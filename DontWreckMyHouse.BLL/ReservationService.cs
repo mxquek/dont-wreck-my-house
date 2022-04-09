@@ -37,6 +37,7 @@ namespace DontWreckMyHouse.BLL
             reservation.ID = GetNextReservationID(host.ID);
             reservation.StartDate = startDate;
             reservation.EndDate = endDate;
+            reservation.GuestID = guest.ID;
             reservation.Total = CalculateTotal(host, startDate, endDate);
             return reservation;
         }
@@ -111,9 +112,10 @@ namespace DontWreckMyHouse.BLL
             }
         }
 
-        public void Add(Reservation reservation)
+        public Result<Reservation> Add(Reservation reservation, string hostID)
         {
-            throw new NotImplementedException();
+            Result<Reservation> result = ReservationRepository.Add(reservation, hostID);
+            return result;
         }
     }
 }

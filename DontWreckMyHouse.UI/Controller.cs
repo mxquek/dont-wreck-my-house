@@ -77,7 +77,7 @@ namespace DontWreckMyHouse.UI
                                                     .Where(reservation => reservation.StartDate >= startingViewDate);
             if(startingViewDate > DateTime.MinValue || targetReservations.Count() == 0)
             {
-                _View.DisplayMessage($"{host} has no future reservations.");
+                _View.DisplayMessage($"{host.LastName} has no future reservations.");
             }
             foreach (Reservation reservation in targetReservations)
             {
@@ -150,7 +150,7 @@ namespace DontWreckMyHouse.UI
             Reservation reservation = _ReservationService.Make(host, guest, startDate, endDate);
             if(_View.ReservationConfirmation(reservation))
             {
-                _ReservationService.Add(reservation);
+                _ReservationService.Add(reservation,host.ID);
             }
             else
             {

@@ -62,6 +62,15 @@ namespace DontWreckMyHouse.DAL
             return result;
         }
 
+        public Result<Reservation> Add(Reservation reservation, string hostID)
+        {
+            Result<Reservation> result = new Result<Reservation>();
+            Result<List<Reservation>> all = GetReservationsByHostID(hostID);
+            all.Data.Add(reservation);
+            WriteToFile(all.Data, hostID);
+            return result;
+        }
+
         public Reservation Deserialize(string data)
         {
             Reservation result = new Reservation();

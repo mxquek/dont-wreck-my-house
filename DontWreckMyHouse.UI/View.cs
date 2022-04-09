@@ -172,7 +172,7 @@ namespace DontWreckMyHouse.UI
         public bool ReservationConfirmation(Reservation reservation)
         {
             _IO.PrintLine($"Start: {reservation.StartDate:MM/dd/yyyy}");
-            _IO.PrintLine($"End: {reservation.StartDate:MM/dd/yyyy}");
+            _IO.PrintLine($"End: {reservation.EndDate:MM/dd/yyyy}");
             _IO.PrintLine($"Total: {reservation.Total:C}");
             return _IO.ReadBool("Is this okay? [y/n]");
         }
