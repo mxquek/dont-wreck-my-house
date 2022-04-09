@@ -148,9 +148,9 @@ namespace DontWreckMyHouse.BLL
             }
             else
             {
-                ReservationRepository.Edit(updatedReservation, hostID);
+                result = ReservationRepository.Edit(updatedReservation, hostID);
             }
-            throw new NotImplementedException();
+            return result;
         }
     }
 }

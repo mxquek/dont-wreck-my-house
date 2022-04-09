@@ -84,7 +84,24 @@ namespace DontWreckMyHouse.DAL
 
         public Result<Reservation> Edit(Reservation updatedReservation, string hostID)
         {
-            throw new NotImplementedException();
+            Result<Reservation> result = new Result<Reservation>();
+            Result<List<Reservation>> all = GetReservationsByHostID(hostID);
+            int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.ID).FirstOrDefault());
+
+            if (targetIndex == -1)
+            {
+                result.Success = false;
+                result.Message = $"Reservation {updatedReservation.ID} not found.";
+            }
+            else
+            {
+                all.Data[targetIndex].StartDate = updatedReservation.StartDate;
+                all.Data[targetIndex].EndDate = updatedReservation.EndDate;
+                all.Data[targetIndex].Total = updatedReservation.Total;
+                result.Success = true;
+                result.Message = $"Reservation {updatedReservation.ID} updated.";
+            }
+            return result;
         }
 
         public Reservation Deserialize(string data)
