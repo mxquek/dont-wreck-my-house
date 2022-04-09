@@ -5,7 +5,6 @@
         Exit,
         SearchByEmail,
         PickFromList,
-        SearchByID
     }
 
     public static class SearchOptionExtensions
@@ -15,7 +14,6 @@
             SearchOption.Exit => "Exit Search",
             SearchOption.SearchByEmail => "Search By Email",
             SearchOption.PickFromList => "Pick From a List",
-            SearchOption.SearchByID => "Search By ID",
             _ => throw new NotImplementedException()
         };
     }

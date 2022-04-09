@@ -133,8 +133,6 @@ namespace DontWreckMyHouse.UI
                     Result<List<Guest>> guests = _GuestService.FindByLastName(_View.GetNamePrefix("Guest"));
                     guestResult = _View.ChooseGuest(guests.Data);
                     break;
-                case SearchOption.SearchByID:
-                    break;
             }
             _View.DisplayStatus(guestResult.Success, guestResult.Message);
             return guestResult;
