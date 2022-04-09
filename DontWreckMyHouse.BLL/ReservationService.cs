@@ -117,5 +117,11 @@ namespace DontWreckMyHouse.BLL
             Result<Reservation> result = ReservationRepository.Add(reservation, hostID);
             return result;
         }
+
+        public Result<Reservation> Remove(Reservation reservation, string hostID)
+        {
+            Result<Reservation> result = ReservationRepository.Remove(reservation, hostID);
+            return result;
+        }
     }
 }

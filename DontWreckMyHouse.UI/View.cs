@@ -203,10 +203,11 @@ namespace DontWreckMyHouse.UI
                 _IO.Error(message);
             }
         }
+
         public void DisplayReservation(Reservation reservation, Guest guest)
         {
             _IO.PrintLine($"ID: {reservation.ID:D2}, {reservation.StartDate:MM/dd/yyyy} - {reservation.EndDate:MM/dd/yyyy}," +
-                            $"Guest: {guest.LastName}, {guest.FirstName}, Email: {guest.Email})");
+                            $"Guest: {guest.LastName}, {guest.FirstName}, Email: {guest.Email}");
         }
         public bool ReservationConfirmation(Reservation reservation)
         {

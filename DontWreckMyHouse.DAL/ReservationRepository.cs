@@ -71,6 +71,17 @@ namespace DontWreckMyHouse.DAL
             return result;
         }
 
+        public Result<Reservation> Remove(Reservation reservation, string hostID)
+        {
+            Result<Reservation> result = new Result<Reservation>();
+            Result<List<Reservation>> all = GetReservationsByHostID(hostID);
+            all.Data.Remove(reservation);
+            WriteToFile(all.Data, hostID);
+            result.Success = true;
+            result.Message = $"Reservation {reservation.ID} successfully deleted";
+            return result;
+        }
+
         public Reservation Deserialize(string data)
         {
             Reservation result = new Reservation();

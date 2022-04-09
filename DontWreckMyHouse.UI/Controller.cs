@@ -93,7 +93,7 @@ namespace DontWreckMyHouse.UI
             foreach (Reservation reservation in result.Data)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
-                _View.DisplayStatus(guestResult.Success, guestResult.Message);
+//                _View.DisplayStatus(guestResult.Success, guestResult.Message);
                 _View.DisplayReservation(reservation, guestResult.Data);
             }
             return result;
@@ -177,8 +177,8 @@ namespace DontWreckMyHouse.UI
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
             Result<List<Reservation>> reservations = ViewReservationsForHost(host, DateTime.Now, guest);
             if(reservations.Success == false) { return; }
-            _View.ChooseReservation(reservations.Data, guest);
-
+            Result<Reservation> result = _ReservationService.Remove(_View.ChooseReservation(reservations.Data, guest).Data, host.ID);
+            _View.DisplayStatus(result.Success, result.Message);
         }
 
         
