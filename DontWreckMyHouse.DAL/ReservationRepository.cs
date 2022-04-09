@@ -82,27 +82,26 @@ namespace DontWreckMyHouse.DAL
             return result;
         }
 
-        public Result<Reservation> Edit(Reservation updatedReservation, string hostID)
+        public void Edit(Result<Reservation> updatedReservation, string hostID)
         {
-            Result<Reservation> result = new Result<Reservation>();
             Result<List<Reservation>> all = GetReservationsByHostID(hostID);
-            int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.ID).FirstOrDefault());
+            int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());
 
             if (targetIndex == -1)
             {
-                result.Success = false;
-                result.Message = $"Reservation {updatedReservation.ID} not found.";
+                updatedReservation.Success = false;
+                updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} not found.";
             }
             else
             {
-                all.Data[targetIndex].StartDate = updatedReservation.StartDate;
-                all.Data[targetIndex].EndDate = updatedReservation.EndDate;
-                all.Data[targetIndex].Total = updatedReservation.Total;
-                result.Success = true;
-                result.Message = $"Reservation {updatedReservation.ID} updated.";
+                all.Data[targetIndex].StartDate = updatedReservation.Data.StartDate;
+                all.Data[targetIndex].EndDate = updatedReservation.Data.EndDate;
+                all.Data[targetIndex].Total = updatedReservation.Data.Total;
+                updatedReservation.Success = true;
+                updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} updated.";
                 WriteToFile(all.Data, hostID);
             }
-            return result;
+            return;
         }
 
         public Reservation Deserialize(string data)

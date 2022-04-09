@@ -15,7 +15,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             throw new NotImplementedException();
         }
 
-        public Result<Reservation> Edit(Reservation updatedReservation, string hostID)
+        public void Edit(Result<Reservation> updatedReservation, string hostID)
         {
             throw new NotImplementedException();
         }

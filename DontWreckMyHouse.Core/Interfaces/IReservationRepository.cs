@@ -12,6 +12,6 @@ namespace DontWreckMyHouse.Core.Interfaces
         public Result<List<Reservation>> GetReservationsByHostID(string hostID);
         public Result<Reservation> Add(Reservation reservation, string hostID);
         public Result<Reservation> Remove(Reservation reservation, string hostID);
-        public Result<Reservation> Edit(Reservation updatedReservation, string hostID);
+        public void Edit(Result<Reservation> updatedReservation, string hostID);
     }
 }

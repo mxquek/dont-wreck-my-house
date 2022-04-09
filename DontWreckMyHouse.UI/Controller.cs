@@ -169,6 +169,7 @@ namespace DontWreckMyHouse.UI
         }
         public void EditReservation()
         {
+            Result<Reservation> result = new Result<Reservation>();
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
             Result<List<Reservation>> reservations = ViewReservationsForHost(host, DateTime.Now, guest);
@@ -176,7 +177,24 @@ namespace DontWreckMyHouse.UI
             Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data, guest);
             DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
             DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
-            Result<Reservation> result = _ReservationService.Edit(oldReservation.Data, host, newStartDate, newEndDate);
+            if (newStartDate == null)
+            {
+                newStartDate = oldReservation.Data.StartDate;
+            }
+            if(newEndDate == null)
+            {
+                newEndDate = oldReservation.Data.EndDate;
+            }
+            result.Data = _ReservationService.Make(host, guest, (DateTime)newStartDate, (DateTime)newEndDate, oldReservation.Data.ID);
+            if (_View.ReservationConfirmation(result.Data))
+            {
+                _ReservationService.Edit(result, host.ID);
+            }
+            else
+            {
+                result.Success = false;
+                result.Message = "Changes abandoned. Returning to Main Menu...";
+            }
             _View.DisplayStatus(result.Success, result.Message);
         }
         public void CancelReservation()

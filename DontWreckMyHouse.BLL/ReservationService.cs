@@ -30,11 +30,18 @@ namespace DontWreckMyHouse.BLL
             return result;
         }
 
-        public Reservation Make(Host host, Guest guest, DateTime startDate, DateTime endDate)
+        public Reservation Make(Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
         {
             Reservation reservation = new Reservation();
-            Validate(host, guest, startDate, endDate);
-            reservation.ID = GetNextReservationID(host.ID);
+            Validate(host, guest, startDate, endDate, oldReservationID);
+            if (oldReservationID == 0)
+            {
+                reservation.ID = GetNextReservationID(host.ID);
+            }
+            else
+            {
+                reservation.ID = oldReservationID;
+            }
             reservation.StartDate = startDate;
             reservation.EndDate = endDate;
             reservation.GuestID = guest.ID;
@@ -66,11 +73,11 @@ namespace DontWreckMyHouse.BLL
             return total;
         }
 
-        private Result<Reservation> Validate(Host host, Guest guest, DateTime startDate, DateTime endDate)
+        private Result<Reservation> Validate(Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
         {
             Result<Reservation> result = new Result<Reservation>();
             ValidateNulls(host, guest, startDate, endDate, result);
-            ValidateReservationPeriod(host.ID,startDate,endDate,result);
+            ValidateReservationPeriod(host.ID,startDate,endDate,result,reservationID);
 
             return result;
         }
@@ -130,34 +137,11 @@ namespace DontWreckMyHouse.BLL
             return result;
         }
 
-        public Result<Reservation> Edit(Reservation oldReservation, Host host, DateTime? newStartDate, DateTime? newEndDate)
+        public void Edit(Result<Reservation> updatedReservation,string hostID)
         {
-            Result<Reservation> result = new Result<Reservation>();
-            result.Success = true;
-            result.Message = "Default";
+            ReservationRepository.Edit(updatedReservation, hostID);
 
-            Reservation updatedReservation = new Reservation(oldReservation);
-            
-            if(newStartDate != null)
-            {
-                updatedReservation.StartDate = (DateTime)newStartDate;
-            }
-            if(newEndDate != null)
-            {
-                updatedReservation.EndDate = (DateTime)newEndDate;
-            }
-
-            ValidateReservationPeriod(host.ID, updatedReservation.StartDate, updatedReservation.EndDate, result, updatedReservation.ID);
-            if(result.Success == false)
-            {
-                return result;
-            }
-            else
-            {
-                updatedReservation.Total = CalculateTotal(host, updatedReservation.StartDate, updatedReservation.EndDate);
-                result = ReservationRepository.Edit(updatedReservation, host.ID);
-            }
-            return result;
+            return;
         }
     }
 }
