@@ -15,6 +15,11 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             throw new NotImplementedException();
         }
 
+        public Result<Reservation> Edit(Reservation updatedReservation, string hostID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Result<List<Reservation>> GetReservationsByHostID(string hostID)
         {
             throw new NotImplementedException();

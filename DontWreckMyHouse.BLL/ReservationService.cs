@@ -66,16 +66,16 @@ namespace DontWreckMyHouse.BLL
             return total;
         }
 
-        private Result<string> Validate(Host host, Guest guest, DateTime startDate, DateTime endDate)
+        private Result<Reservation> Validate(Host host, Guest guest, DateTime startDate, DateTime endDate)
         {
-            Result<string> result = new Result<string>();
+            Result<Reservation> result = new Result<Reservation>();
             ValidateNulls(host, guest, startDate, endDate, result);
-            ValidateReservationPeriod(host,startDate,endDate,result);
+            ValidateReservationPeriod(host.ID,startDate,endDate,result);
 
             return result;
         }
 
-        private void ValidateNulls(Host host, Guest guest, DateTime startDate, DateTime endDate, Result<string> result)
+        private void ValidateNulls(Host host, Guest guest, DateTime startDate, DateTime endDate, Result<Reservation> result)
         {
             if(host == null)
             {
@@ -99,9 +99,9 @@ namespace DontWreckMyHouse.BLL
             }
         }
 
-        private void ValidateReservationPeriod(Host host, DateTime startDate, DateTime endDate, Result<string> result)
+        private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result)
         {
-            Result < List < Reservation >> reservations = GetReservationsByHostID(host.ID);
+            Result < List < Reservation >> reservations = GetReservationsByHostID(hostID);
             if (reservations.Data.Any(r => (startDate >= r.StartDate
                                         && startDate <= r.EndDate)
                                         || (endDate >= r.StartDate
@@ -122,6 +122,35 @@ namespace DontWreckMyHouse.BLL
         {
             Result<Reservation> result = ReservationRepository.Remove(reservation, hostID);
             return result;
+        }
+
+        public Result<Reservation> Edit(Reservation oldReservation, string hostID, DateTime? newStartDate, DateTime? newEndDate)
+        {
+            Result<Reservation> result = new Result<Reservation>();
+            result.Success = true;
+            result.Message = "Default";
+
+            Reservation updatedReservation = new Reservation(oldReservation);
+            
+            if(newStartDate != null)
+            {
+                updatedReservation.StartDate = (DateTime)newStartDate;
+            }
+            if(newEndDate != null)
+            {
+                updatedReservation.EndDate = (DateTime)newEndDate;
+            }
+
+            ValidateReservationPeriod(hostID, updatedReservation.StartDate, updatedReservation.EndDate, result);
+            if(result.Success == false)
+            {
+                return result;
+            }
+            else
+            {
+                ReservationRepository.Edit(updatedReservation, hostID);
+            }
+            throw new NotImplementedException();
         }
     }
 }

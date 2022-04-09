@@ -82,6 +82,11 @@ namespace DontWreckMyHouse.DAL
             return result;
         }
 
+        public Result<Reservation> Edit(Reservation updatedReservation, string hostID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Reservation Deserialize(string data)
         {
             Reservation result = new Reservation();

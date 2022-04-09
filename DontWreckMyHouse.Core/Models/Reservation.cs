@@ -25,6 +25,14 @@ namespace DontWreckMyHouse.Core.Models
             GuestID = guestID;
             Total = total;
         }
+        public Reservation(Reservation existingReservation)
+        {
+            ID = existingReservation.ID;
+            StartDate = existingReservation.StartDate;
+            EndDate = existingReservation.EndDate;
+            GuestID = existingReservation.GuestID;
+            Total = existingReservation.Total;
+        }
 
         public override bool Equals(object? obj)
         {
