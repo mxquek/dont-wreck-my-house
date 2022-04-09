@@ -116,7 +116,7 @@ namespace DontWreckMyHouse.UI
             }
 
             int index = 1;
-            foreach(Guest guest in guests)
+            foreach(Guest guest in guests.Take(25))
             {
                 _IO.PrintLine($"{index++:D2}: {guest.FirstName} {guest.LastName} {guest.Email}");
             }
@@ -139,6 +139,45 @@ namespace DontWreckMyHouse.UI
             result.Data = guests[index - 1];
             result.Success = true;
             result.Message = $"Guest {result.Data.LastName} was chosen.";
+            return result;
+        }
+
+        public Result<Reservation> ChooseReservation(List<Reservation> reservations, Guest guest)
+        {
+            Result<Reservation> result = new Result<Reservation>();
+
+            if (reservations == null || reservations.Count == 0)
+            {
+                result.Success = false;
+                result.Message = "No reservation found";
+                return result;
+            }
+            //foreach(Reservation reservation in reservations)
+            //{
+            //    DisplayReservation(reservation, guest);
+            //}
+
+            while (true)
+            {
+                _IO.PrintLine("0. Exit");
+                int reservationID = _IO.ReadInt("Select a reservation by its ID: ");
+                if (reservationID == 0)
+                {
+                    result.Success = false;
+                    result.Message = "Exiting Reservation Selection...";
+                    break;
+                }
+                result.Data = reservations.Where(reservation => reservation.ID == reservationID).FirstOrDefault();
+                if (result.Data == null)
+                {
+                    _IO.Error("Invalid Reservation ID");
+                }
+                else
+                {
+                    result.Success = true;
+                    break;
+                }
+            }
             return result;
         }
         //Display Methods
@@ -177,5 +216,7 @@ namespace DontWreckMyHouse.UI
             _IO.PrintLine($"Total: {reservation.Total:C}");
             return _IO.ReadBool("Is this okay? [y/n]");
         }
+
+
     }
 }

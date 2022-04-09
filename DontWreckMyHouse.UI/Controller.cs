@@ -83,9 +83,11 @@ namespace DontWreckMyHouse.UI
                 result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
             }
 
-            if(startingViewDate > DateTime.MinValue || result.Data.Count() == 0)
+            if(startingViewDate > DateTime.MinValue && result.Data.Count() == 0)
             {
-                _View.DisplayMessage($"{host.LastName} has no future reservations.");
+                result.Success = false;
+                result.Message = $"{host.LastName} has no future reservations.";
+                _View.DisplayMessage(result.Message);
                 return result;
             }
             foreach (Reservation reservation in result.Data)
@@ -173,8 +175,10 @@ namespace DontWreckMyHouse.UI
         {
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
-            ViewReservationsForHost(host, DateTime.Now, guest);
-            
+            Result<List<Reservation>> reservations = ViewReservationsForHost(host, DateTime.Now, guest);
+            if(reservations.Success == false) { return; }
+            _View.ChooseReservation(reservations.Data, guest);
+
         }
 
         
