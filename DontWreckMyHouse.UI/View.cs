@@ -67,6 +67,24 @@ namespace DontWreckMyHouse.UI
             }
             return result;
         }
+        public DateTime? GetOptionalFutureDate(string message)
+        {
+            DateTime? result = new DateTime();
+            while (true)
+            {
+                result = _IO.ReadOptionalDate(message + " (MM/dd/yyyy): ");
+                if(result == null)
+                {
+                    break;
+                }
+                else if (result < DateTime.Now)
+                {
+                    _IO.Error("Date must be in the future.");
+                }
+                else { break; }
+            }
+            return result;
+        }
 
         public Result<Host> ChooseHost(List<Host> hosts)
         {

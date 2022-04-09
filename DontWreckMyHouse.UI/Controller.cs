@@ -169,7 +169,15 @@ namespace DontWreckMyHouse.UI
         }
         public void EditReservation()
         {
-            throw new NotImplementedException();
+            Host host = GetHost(GetSearchOption("Host")).Data;
+            Guest guest = GetGuest(GetSearchOption("Guest")).Data;
+            Result<List<Reservation>> reservations = ViewReservationsForHost(host, DateTime.Now, guest);
+            if (reservations.Success == false) { return; }
+            Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data, guest);
+            DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
+            DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
+            Result<Reservation> result = _ReservationService.Edit(oldReservation.Data, host.ID, newStartDate, newEndDate);
+            _View.DisplayStatus(result.Success, result.Message);
         }
         public void CancelReservation()
         {
