@@ -110,6 +110,11 @@ namespace DontWreckMyHouse.BLL
                 result.Success = false;
                 result.Message = "Reservation period overlaps with existing reservation. Dates must be during available dates.";
             }
+            if(endDate < startDate)
+            {
+                result.Success = false;
+                result.Message = "End date must be after start date.";
+            }
         }
 
         public Result<Reservation> Add(Reservation reservation, string hostID)
@@ -124,7 +129,7 @@ namespace DontWreckMyHouse.BLL
             return result;
         }
 
-        public Result<Reservation> Edit(Reservation oldReservation, string hostID, DateTime? newStartDate, DateTime? newEndDate)
+        public Result<Reservation> Edit(Reservation oldReservation, Host host, DateTime? newStartDate, DateTime? newEndDate)
         {
             Result<Reservation> result = new Result<Reservation>();
             result.Success = true;
@@ -141,14 +146,15 @@ namespace DontWreckMyHouse.BLL
                 updatedReservation.EndDate = (DateTime)newEndDate;
             }
 
-            ValidateReservationPeriod(hostID, updatedReservation.StartDate, updatedReservation.EndDate, result);
+            ValidateReservationPeriod(host.ID, updatedReservation.StartDate, updatedReservation.EndDate, result);
             if(result.Success == false)
             {
                 return result;
             }
             else
             {
-                result = ReservationRepository.Edit(updatedReservation, hostID);
+                updatedReservation.Total = CalculateTotal(host, updatedReservation.StartDate, updatedReservation.EndDate);
+                result = ReservationRepository.Edit(updatedReservation, host.ID);
             }
             return result;
         }
