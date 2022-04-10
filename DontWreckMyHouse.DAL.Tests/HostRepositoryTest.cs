@@ -46,8 +46,9 @@ namespace DontWreckMyHouse.DAL.Tests
         public void GetAll_ReturnsAllHosts()
         {
             List<Host> expected = new List<Host>();
-            expected.Add(new Host("GUID-###1","Doe","JaneDoe@gmail.com","(123) 123-1234","1212 Everlane Rd","Buffalo","NY","14201",25,50));
-            expected.Add(new Host("123-4ge23-sff43", "Well", "ChristinaWell@yahoo.com", "(222) 222-2222", "4444 Oceanside Ave", "Plano", "TX", "75252", 10, 20));
+            expected.Add(ReservationRepositoryTest.HOST1);
+            expected.Add(ReservationRepositoryTest.HOST2);
+
             Result <List<Host>> actual = hostRepository.GetAll();
             int max;
 

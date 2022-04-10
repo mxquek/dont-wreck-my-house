@@ -1,5 +1,6 @@
 using DontWreckMyHouse.BLL.Tests.TestDoubles;
 using DontWreckMyHouse.Core.Models;
+using DontWreckMyHouse.DAL.Tests;
 using NUnit.Framework;
 
 namespace DontWreckMyHouse.BLL.Tests
@@ -17,8 +18,8 @@ namespace DontWreckMyHouse.BLL.Tests
         [Test]
         public void FindByEmail_ExistingEmail_ReturnsHost()
         {
-            Host expected = new Host("GUID-###1", "Doe", "JaneDoe@gmail.com", "(123) 123-1234", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
-            Result<Host> actual = hostService.FindByEmail("JaneDoe@gmail.com");
+            Host expected = new Host(ReservationRepositoryTest.HOST1);
+            Result<Host> actual = hostService.FindByEmail(ReservationRepositoryTest.HOST1.Email);
 
             Assert.IsTrue(expected.Equals(actual.Data));
             Assert.IsTrue(actual.Success);

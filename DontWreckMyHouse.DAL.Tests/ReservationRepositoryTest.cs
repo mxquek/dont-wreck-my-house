@@ -11,29 +11,43 @@ namespace DontWreckMyHouse.DAL.Tests
         static string CurrentDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
         static string DATA_DIRECTORY = Path.Combine(CurrentDirectory, "data");
         const string SEED_DIRECTORY = "seed";
-        const string SEED_FILE = "testReservationSeed.csv";
-        static string TEST_DIRECTORY = Path.Combine(DATA_DIRECTORY,"test");
-        const string TEST_FILE = "testReservations.csv";
+        static string SEED_DATA_DIRECTORY = "testReservationSeed";
 
-        string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
-        string Test_Path = Path.Combine(TEST_DIRECTORY, TEST_FILE);
+        static string TEST_DIRECTORY = "test";
+        static string TEST_DATA_DIRECTORY = "testReservations";
+
+        string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_DATA_DIRECTORY);
+        string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_DATA_DIRECTORY);
+
+        public static Host HOST1 = new Host("GUID-1111", "Doe", "JaneDoe@gmail.com", "(111) 111-1111", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
+        public static Host HOST2 = new Host("GUID-2222", "Well", "ChristinaWell@yahoo.com", "(222) 222-2222", "4444 Oceanside Ave", "Plano", "TX", "75252", 10, 20);
 
         ReservationRepository reservationRepository;
 
         [SetUp]
         public void Setup()
         {
-            if (!Directory.Exists(TEST_DIRECTORY))
+            if (!Directory.Exists(Test_Path))
             {
-                Directory.CreateDirectory(TEST_DIRECTORY);
+                Directory.CreateDirectory(Test_Path);
             }
-            File.Copy(Seed_Path, Test_Path, true);
+
+            //Deletes all existing test files
+            foreach(var testFile in Directory.GetFiles(Test_Path))
+            {
+                File.Delete(testFile);
+            }
+
+            //Clean copy of all seed files
+            foreach(var srcPath in Directory.GetFiles(Seed_Path))
+            {
+                File.Copy(srcPath, srcPath.Replace(Seed_Path, Test_Path), true);
+            }
             
-            reservationRepository = new ReservationRepository(TEST_DIRECTORY);
+            reservationRepository = new ReservationRepository(Test_Path);
         }
 
         //Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
-        //Host HOST = new Host("GUID-####", "Doe", "JaneDoe@gmail.com", "(123) 123-4567", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
 
         [Test]
         public void Deserialize_StringReservation_ReturnsReservation()
@@ -70,18 +84,17 @@ namespace DontWreckMyHouse.DAL.Tests
         [Test]
         public void WriteToFile_GivenNonexistentFile_CreatesNewFile()
         {
-            string expectedPath = Path.Combine(TEST_DIRECTORY, "NonExistentFile.csv");
-            if (File.Exists(expectedPath))
-            {
-                File.Delete(expectedPath);
-            }
+            string expectedPath = Path.Combine(Test_Path, "NonExistentFile.csv");
 
             reservationRepository.WriteToFile(new List<Reservation>(), "NonExistentFile");
             Assert.IsTrue(File.Exists(expectedPath));
-            if (File.Exists(expectedPath))
-            {
-                File.Delete(expectedPath);
-            }
+
+        }
+
+        [Test]
+        public void GetReservationsByHostID_GivenExistingHostID_GetsAllReservationsForHost()
+        {
+
         }
     }
 }
