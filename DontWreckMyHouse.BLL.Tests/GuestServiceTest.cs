@@ -11,6 +11,26 @@ namespace DontWreckMyHouse.BLL.Tests
     public class GuestServiceTest
     {
         GuestService guestService = new GuestService(new GuestRepositoryDouble());
+
+        [Test]
+        public void FindByID_ExistingGuestID_ReturnsGuest()
+        {
+            Guest expected = new Guest(GuestRepositoryTest.GUEST1);
+            Result<Guest> actual = guestService.FindByID(GuestRepositoryTest.GUEST1.ID);
+
+            Assert.AreEqual(expected, actual.Data);
+            Assert.IsTrue(actual.Success);
+        }
+        [Test]
+        public void FindByID_NonexistentGuestID_ReturnsNull()
+        {
+            Guest expected = null;
+            Result<Guest> actual = guestService.FindByID(0);
+
+            Assert.AreEqual(expected, actual.Data);
+            Assert.IsFalse(actual.Success);
+        }
+
         [Test]
         public void FindByEmail_ExistingGuestEmail_ReturnsGuest()
         {
@@ -20,7 +40,6 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.AreEqual(expected, actual.Data);
             Assert.IsTrue(actual.Success);
         }
-
         [Test]
         public void FindByEmail_NonexistentGuestEmail_ReturnsNull()
         {
@@ -42,7 +61,6 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.IsTrue(actual.Data.Any(guest => guest.Equals(expected)));
             Assert.IsTrue(actual.Success);
         }
-
         [Test]
         public void FindByLastName_NonexistentGuestLastName_ReturnsNoHosts()
         {
