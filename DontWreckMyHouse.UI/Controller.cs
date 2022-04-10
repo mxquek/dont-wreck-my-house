@@ -306,8 +306,5 @@ namespace DontWreckMyHouse.UI
             }
             result.Success = true;
         }
-
-
-
     }
 }

@@ -20,9 +20,15 @@ namespace DontWreckMyHouse.DAL.Tests
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_DATA_DIRECTORY);
         string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_DATA_DIRECTORY);
 
-        static DateTime startDate = new DateTime(2022, 11, 11);
-        static DateTime endDate = new DateTime(2022, 11, 12);
-        public static Reservation H1R1 = new Reservation(1, startDate, endDate, 1, 75);
+        //H1R1 exists in Seed
+        static DateTime H1R1StartDate = new DateTime(2022, 11, 11);
+        static DateTime H1R1EndDate = new DateTime(2022, 11, 12);
+        public static Reservation H1R1 = new Reservation(1, H1R1StartDate, H1R1EndDate, 1, 75);
+
+        //H1R2 does not exist in Seed
+        static DateTime H1R2StartDate = new DateTime(2022, 12, 9);
+        static DateTime H1R2EndDate = new DateTime(2022, 12, 10);
+        public static Reservation H1R2 = new Reservation(2, H1R2StartDate, H1R2EndDate, 1, 75);
 
         ReservationRepository reservationRepository;
 
@@ -83,22 +89,55 @@ namespace DontWreckMyHouse.DAL.Tests
         [Test]
         public void Add_GivenReservation_AddReservation()
         {
-            Reservation expected = new Reservation(H1R1);
-
             Result<Reservation> actual = new Result<Reservation>();
-            actual.Data = new Reservation(H1R1);
+            actual.Data = new Reservation(H1R2);
 
             reservationRepository.Add(actual, HostRepositoryTest.HOST1.ID);
-            Assert.IsTrue(actual.Success == true);
+            Assert.IsTrue(actual.Success);
 
             //Assuming GetReservationByHostID is functional
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
             reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
 
-            Assert.IsTrue(all.Data.Any(r => r.Equals(expected)));
+            Assert.IsTrue(all.Data.Any(r => r.Equals(actual.Data)));
         }
 
+        [Test]
+        public void Remove_GivenExistingReservation_RemoveReservation()
+        {
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = new Reservation(H1R1);
+
+            reservationRepository.Remove(actual, HostRepositoryTest.HOST1.ID);
+            Assert.IsTrue(actual.Success);
+
+            //Assuming GetReservationByHostID is functional
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
+
+            Assert.IsFalse(all.Data.Any(r => r.Equals(actual.Data)));
+            Assert.AreEqual(all.Data.Count, 0);
+        }
+
+        [Test]
+        public void Remove_GivenNonexistentReservation_DoesNotRemoveReservation()
+        {
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = new Reservation();
+
+            reservationRepository.Remove(actual, HostRepositoryTest.HOST1.ID);
+            Assert.IsFalse(actual.Success);
+
+            //Assuming GetReservationByHostID is functional
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
+
+            Assert.IsFalse(all.Data.Any(r => r.Equals(actual.Data)));
+            Assert.AreEqual(all.Data.Count, 1);
+        }
 
         [Test]
         public void Deserialize_StringReservation_ReturnsReservation()

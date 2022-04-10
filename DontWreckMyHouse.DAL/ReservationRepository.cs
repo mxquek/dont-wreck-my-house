@@ -81,11 +81,21 @@ namespace DontWreckMyHouse.DAL
                 return;
             }
 
-            all.Data.Remove(reservation.Data);
-            WriteToFile(all.Data, hostID);
+            if(all.Data.Where(r => r.Equals(reservation)).ToList().Count == 0)
+            {
+                reservation.Success = false;
+                reservation.Message = $"Reservation ID {reservation.Data.ID} was not found. Exiting...";
+                return;
+            }
+            else
+            {
+                all.Data.Remove(reservation.Data);
+                WriteToFile(all.Data, hostID);
 
-            reservation.Success = true;
-            reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
+                reservation.Success = true;
+                reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
+            }
+            
             return;
         }
         public void Edit(Result<Reservation> updatedReservation, string hostID)
