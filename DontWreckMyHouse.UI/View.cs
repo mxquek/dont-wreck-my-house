@@ -160,7 +160,7 @@ namespace DontWreckMyHouse.UI
             return result;
         }
 
-        public Result<Reservation> ChooseReservation(List<Reservation> reservations, Guest guest)
+        public Result<Reservation> ChooseReservation(List<Reservation> reservations)
         {
             Result<Reservation> result = new Result<Reservation>();
             result.Success = true;
@@ -170,10 +170,6 @@ namespace DontWreckMyHouse.UI
                 result.Success = false;
                 result.Message = "No reservation found";
                 return result;
-            }
-            foreach (Reservation reservation in reservations)
-            {
-                DisplayReservation(reservation, guest);
             }
 
             while (true)
@@ -234,7 +230,7 @@ namespace DontWreckMyHouse.UI
             _IO.PrintLine($"Start: {reservation.StartDate:MM/dd/yyyy}");
             _IO.PrintLine($"End: {reservation.EndDate:MM/dd/yyyy}");
             _IO.PrintLine($"Total: {reservation.Total:C}");
-            return _IO.ReadBool("Is this okay? [y/n]");
+            return _IO.ReadBool("Is this okay? [y/n]: ");
         }
 
 

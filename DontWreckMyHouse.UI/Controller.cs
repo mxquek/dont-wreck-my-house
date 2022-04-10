@@ -206,14 +206,13 @@ namespace DontWreckMyHouse.UI
             if(_View.ReservationConfirmation(result.Data))
             {
                 _ReservationService.Add(result.Data, host.ID);
-                _View.DisplayStatus(result.Success, result.Message);
-                return;
             }
             else
             {
-                return;
+                result.Success = false;
+                result.Message = "Reservation abandoned. Returning to Main Menu...";
             }
-
+            _View.DisplayStatus(result.Success, result.Message);
         }
         public void EditReservation()
         {
@@ -226,14 +225,21 @@ namespace DontWreckMyHouse.UI
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
             reservations.Data = new List<Reservation>();
             DateTime future = DateTime.Now.AddDays(1);
+
             GetReservationsForHost(host, reservations, future);
             if (reservations.Success == false) 
             {
                 _View.DisplayStatus(reservations.Success, reservations.Message);
                 return;
             }
+            DisplayHostReservations(host, reservations, future, guest);
+            if (reservations.Success == false)
+            {
+                _View.DisplayStatus(reservations.Success, reservations.Message);
+                return;
+            }
 
-            Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data, guest);
+            Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data);
             if(oldReservation.Success == false)
             {
                 _View.DisplayStatus(oldReservation.Success, oldReservation.Message);
@@ -254,7 +260,7 @@ namespace DontWreckMyHouse.UI
             _ReservationService.Make(result, host, guest, (DateTime)newStartDate, (DateTime)newEndDate, oldReservation.Data.ID);
             if(result.Success == false)
             {
-                _View.DisplayStatus(oldReservation.Success, oldReservation.Message);
+                _View.DisplayStatus(result.Success, result.Message);
                 return;
             }
 
@@ -274,9 +280,22 @@ namespace DontWreckMyHouse.UI
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
-            GetReservationsForHost(host, reservations, DateTime.Now);
-            if (reservations.Success == false) { return; }
-            Result<Reservation> result = _ReservationService.Remove(_View.ChooseReservation(reservations.Data, guest).Data, host.ID);
+            DateTime future = DateTime.Now.AddDays(1);
+
+            GetReservationsForHost(host, reservations, future);
+            if (reservations.Success == false)
+            {
+                _View.DisplayStatus(reservations.Success, reservations.Message); 
+                return;
+            }
+            DisplayHostReservations(host, reservations, future, guest);
+            if (reservations.Success == false)
+            {
+                _View.DisplayStatus(reservations.Success, reservations.Message);
+                return;
+            }
+
+            Result<Reservation> result = _ReservationService.Remove(_View.ChooseReservation(reservations.Data).Data, host.ID);
             _View.DisplayStatus(result.Success, result.Message);
         }
 

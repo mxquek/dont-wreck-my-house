@@ -94,21 +94,29 @@ namespace DontWreckMyHouse.BLL
             {
                 result.Message = "Must have a host";
                 result.Success = false;
+                return;
             }
-            if (guest == null)
+            else if (guest == null)
             {
                 result.Message = "Must have a guest";
                 result.Success = false;
+                return;
             }
-            if (startDate == null)
+            else if (startDate == null)
             {
                 result.Message = "Must have a start date";
                 result.Success = false;
+                return;
             }
-            if (endDate == null)
+            else if (endDate == null)
             {
                 result.Message = "Must have an end date";
                 result.Success = false;
+                return;
+            }
+            else
+            {
+                result.Success = true;
             }
         }
 
@@ -125,12 +133,15 @@ namespace DontWreckMyHouse.BLL
             {
                 result.Success = false;
                 result.Message = "Reservation period overlaps with existing reservation. Dates must be during available dates.";
+                return;
             }
             if(endDate < startDate)
             {
                 result.Success = false;
                 result.Message = "End date must be after start date.";
+                return;
             }
+            result.Success = true;
         }
 
         public Result<Reservation> Add(Reservation reservation, string hostID)
