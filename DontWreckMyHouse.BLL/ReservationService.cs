@@ -20,6 +20,8 @@ namespace DontWreckMyHouse.BLL
             ReservationRepository.GetReservationsByHostID(hostID, result);
             if(result.Data == null)
             {
+                result.Success = false;
+                result.Message = "List was not created.";
                 return;
             }
             if(result.Data.Count <= 0)

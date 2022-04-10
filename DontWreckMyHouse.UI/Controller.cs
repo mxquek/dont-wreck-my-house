@@ -68,7 +68,6 @@ namespace DontWreckMyHouse.UI
                 return;
             }
 
-
             DisplayHostReservations(host, result, startingViewDate, guest);
             if (result.Success == false)
             {
@@ -79,7 +78,7 @@ namespace DontWreckMyHouse.UI
             return;
         }
 
-        public void GetReservationsForHost(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime())
+        public void GetReservationsForHost(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
         {
             if (host == null)
             {
@@ -96,6 +95,11 @@ namespace DontWreckMyHouse.UI
 
             result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
                                                     .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
+            if (guest != null)
+            {
+                result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
+            }
+
             result.Success = true;
         }
 
@@ -103,8 +107,8 @@ namespace DontWreckMyHouse.UI
         {
             _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
 
-            //result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
-            //                                        .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
+            result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
+                                                    .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
             if (guest != null)
             {
                 result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
@@ -113,16 +117,16 @@ namespace DontWreckMyHouse.UI
             if (startingViewDate > DateTime.MinValue && result.Data.Count() == 0)
             {
                 result.Success = false;
-                result.Message = $"{host.LastName} has no future reservations.";
+                result.Message = $"{host.LastName} has no reservations on or after {startingViewDate:MM/dd/yyyy}.";
                 _View.DisplayMessage(result.Message);
                 return;
             }
             foreach (Reservation reservation in result.Data)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
-                //                _View.DisplayStatus(guestResult.Success, guestResult.Message);
                 _View.DisplayReservation(reservation, guestResult.Data);
             }
+            result.Success = true;
         }
 
         public SearchOption GetSearchOption(string person)
