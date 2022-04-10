@@ -19,8 +19,9 @@ namespace DontWreckMyHouse.DAL.Tests
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_DATA_DIRECTORY);
         string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_DATA_DIRECTORY);
 
-        public static Host HOST1 = new Host("GUID-1111", "Doe", "JaneDoe@gmail.com", "(111) 111-1111", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
-        public static Host HOST2 = new Host("GUID-2222", "Well", "ChristinaWell@yahoo.com", "(222) 222-2222", "4444 Oceanside Ave", "Plano", "TX", "75252", 10, 20);
+        static DateTime startDate = new DateTime(2022, 11, 11);
+        static DateTime endDate = new DateTime(2022, 11, 12);
+        public static Reservation H1R1 = new Reservation(1, startDate, endDate, 1, 75);
 
         ReservationRepository reservationRepository;
 
@@ -47,6 +48,7 @@ namespace DontWreckMyHouse.DAL.Tests
             reservationRepository = new ReservationRepository(Test_Path);
         }
 
+        
         //Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
 
         [Test]
@@ -88,13 +90,34 @@ namespace DontWreckMyHouse.DAL.Tests
 
             reservationRepository.WriteToFile(new List<Reservation>(), "NonExistentFile");
             Assert.IsTrue(File.Exists(expectedPath));
-
         }
 
         [Test]
         public void GetReservationsByHostID_GivenExistingHostID_GetsAllReservationsForHost()
         {
+            List<Reservation> expected = new List<Reservation>();
+            expected.Add(new Reservation(H1R1));
 
+            Result<List<Reservation>> actual = new Result<List<Reservation>>();
+            actual.Data = new List<Reservation>();
+
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, actual);
+
+            Assert.AreEqual(expected.Count, actual.Data.Count);
+            Assert.AreEqual(expected, actual.Data);
+        }
+
+        [Test]
+        public void GetGetReservationsByHostID_GivenNonexistentHostID_GetsNoReservations()
+        {
+            List<Reservation> expected = new List<Reservation>();
+
+            Result<List<Reservation>> actual = new Result<List<Reservation>>();
+            actual.Data = new List<Reservation>();
+
+            reservationRepository.GetReservationsByHostID("NonexistentHostID", actual);
+
+            Assert.AreEqual(expected, actual.Data);
         }
     }
 }

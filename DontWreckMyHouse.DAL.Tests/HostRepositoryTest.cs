@@ -18,6 +18,9 @@ namespace DontWreckMyHouse.DAL.Tests
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
         static string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
 
+        public static Host HOST1 = new Host("GUID-1111", "Doe", "JaneDoe@gmail.com", "(111) 111-1111", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
+        public static Host HOST2 = new Host("GUID-2222", "Well", "ChristinaWell@yahoo.com", "(222) 222-2222", "4444 Oceanside Ave", "Plano", "TX", "75252", 10, 20);
+
         HostRepository hostRepository;
 
         [SetUp]
@@ -46,8 +49,8 @@ namespace DontWreckMyHouse.DAL.Tests
         public void GetAll_ReturnsAllHosts()
         {
             List<Host> expected = new List<Host>();
-            expected.Add(ReservationRepositoryTest.HOST1);
-            expected.Add(ReservationRepositoryTest.HOST2);
+            expected.Add(HOST1);
+            expected.Add(HOST2);
 
             Result <List<Host>> actual = hostRepository.GetAll();
             int max;

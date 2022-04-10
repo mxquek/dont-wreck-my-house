@@ -18,8 +18,8 @@ namespace DontWreckMyHouse.BLL.Tests
         [Test]
         public void FindByEmail_ExistingEmail_ReturnsHost()
         {
-            Host expected = new Host(ReservationRepositoryTest.HOST1);
-            Result<Host> actual = hostService.FindByEmail(ReservationRepositoryTest.HOST1.Email);
+            Host expected = new Host(HostRepositoryTest.HOST1);
+            Result<Host> actual = hostService.FindByEmail(HostRepositoryTest.HOST1.Email);
 
             Assert.IsTrue(expected.Equals(actual.Data));
             Assert.IsTrue(actual.Success);
