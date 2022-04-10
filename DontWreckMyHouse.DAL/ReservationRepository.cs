@@ -63,6 +63,7 @@ namespace DontWreckMyHouse.DAL
         {
             Result<Reservation> result = new Result<Reservation>();
             Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
             GetReservationsByHostID(hostID, all);
             all.Data.Add(reservation);
             WriteToFile(all.Data, hostID);
@@ -73,6 +74,7 @@ namespace DontWreckMyHouse.DAL
         {
             Result<Reservation> result = new Result<Reservation>();
             Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
             GetReservationsByHostID(hostID, all);
             all.Data.Remove(reservation);
             WriteToFile(all.Data, hostID);
@@ -84,13 +86,20 @@ namespace DontWreckMyHouse.DAL
         public void Edit(Result<Reservation> updatedReservation, string hostID)
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+
             GetReservationsByHostID(hostID, all);
+            if(all.Success == false)
+            {
+                return;
+            }
             int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());
 
             if (targetIndex == -1)
             {
                 updatedReservation.Success = false;
                 updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} not found.";
+                return;
             }
             else
             {

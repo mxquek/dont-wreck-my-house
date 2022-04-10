@@ -163,6 +163,7 @@ namespace DontWreckMyHouse.UI
         public Result<Reservation> ChooseReservation(List<Reservation> reservations, Guest guest)
         {
             Result<Reservation> result = new Result<Reservation>();
+            result.Success = true;
 
             if (reservations == null || reservations.Count == 0)
             {

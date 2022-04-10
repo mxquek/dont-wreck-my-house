@@ -35,6 +35,10 @@ namespace DontWreckMyHouse.BLL
         public void Make(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
         {
             Validate(result, host, guest, startDate, endDate, oldReservationID);
+            if(result.Success == false)
+            {
+                return;
+            }
             if (oldReservationID == 0)
             {
                 result.Data.ID = GetNextReservationID(host.ID);
@@ -76,12 +80,12 @@ namespace DontWreckMyHouse.BLL
             return total;
         }
 
-        private Result<Reservation> Validate(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
+        private void Validate(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
         {
             ValidateNulls(host, guest, startDate, endDate, result);
             ValidateReservationPeriod(host.ID,startDate,endDate,result,reservationID);
 
-            return result;
+            return;
         }
 
         private void ValidateNulls(Host host, Guest guest, DateTime startDate, DateTime endDate, Result<Reservation> result)

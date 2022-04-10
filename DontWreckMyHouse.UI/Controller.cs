@@ -218,14 +218,28 @@ namespace DontWreckMyHouse.UI
         public void EditReservation()
         {
             Result<Reservation> result = new Result<Reservation>();
+            result = new Result<Reservation>();
+
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
 
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
-            GetReservationsForHost(host, reservations, DateTime.Now);
-            if (reservations.Success == false) { return; }
+            reservations.Data = new List<Reservation>();
+            DateTime future = DateTime.Now.AddDays(1);
+            GetReservationsForHost(host, reservations, future);
+            if (reservations.Success == false) 
+            {
+                _View.DisplayStatus(reservations.Success, reservations.Message);
+                return;
+            }
 
             Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data, guest);
+            if(oldReservation.Success == false)
+            {
+                _View.DisplayStatus(oldReservation.Success, oldReservation.Message);
+                return;
+            }
+
             DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
             DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
             if (newStartDate == null)
@@ -236,17 +250,24 @@ namespace DontWreckMyHouse.UI
             {
                 newEndDate = oldReservation.Data.EndDate;
             }
-            //result.Data = _ReservationService.Make(host, guest, (DateTime)newStartDate, (DateTime)newEndDate, oldReservation.Data.ID);
-            //if (_View.ReservationConfirmation(result.Data))
-            //{
-            //    _ReservationService.Edit(result, host.ID);
-            //}
-            //else
-            //{
-            //    result.Success = false;
-            //    result.Message = "Changes abandoned. Returning to Main Menu...";
-            //}
-            //_View.DisplayStatus(result.Success, result.Message);
+
+            _ReservationService.Make(result, host, guest, (DateTime)newStartDate, (DateTime)newEndDate, oldReservation.Data.ID);
+            if(result.Success == false)
+            {
+                _View.DisplayStatus(oldReservation.Success, oldReservation.Message);
+                return;
+            }
+
+            if (_View.ReservationConfirmation(result.Data))
+            {
+                _ReservationService.Edit(result, host.ID);
+            }
+            else
+            {
+                result.Success = false;
+                result.Message = "Changes abandoned. Returning to Main Menu...";
+            }
+            _View.DisplayStatus(result.Success, result.Message);
         }
         public void CancelReservation()
         {
