@@ -16,6 +16,7 @@ namespace DontWreckMyHouse.BLL
         {
             Result<List<Host>> hosts = HostRepository.GetAll();
             Result<Host> result = new Result<Host>();
+
             result.Data = hosts.Data.Where(host => host.Email == email).SingleOrDefault();
             if (result.Data == null)
             {

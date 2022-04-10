@@ -35,7 +35,7 @@ namespace DontWreckMyHouse.BLL
             Result<Guest> result = new Result<Guest>();
 
             result.Data = guests.Data.Where(guest => guest.Email == email).FirstOrDefault();
-            if(result == null)
+            if(result.Data == null)
             {
                 result.Success = false;
                 result.Message = $"No guest found with email: {email}.";
@@ -43,6 +43,7 @@ namespace DontWreckMyHouse.BLL
             else
             {
                 result.Success = true;
+                result.Message = $"Guest with {email} found.";
             }
 
             return result;

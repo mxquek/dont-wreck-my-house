@@ -18,8 +18,8 @@ namespace DontWreckMyHouse.DAL.Tests
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
         static string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
 
-        static Guest GUEST1 = new Guest(1, "John", "Smith", "JohnSmith@gmail.com", "(333) 333-3333", "TX");
-        static Guest GUEST2 = new Guest(2, "Terry", "Bob", "TBob@yahoo.com", "(444) 444-4444", "NV");
+        public static Guest GUEST1 = new Guest(1, "John", "Smith", "JohnSmith@gmail.com", "(333) 333-3333", "TX");
+        public static Guest GUEST2 = new Guest(2, "Terry", "Bob", "TBob@yahoo.com", "(444) 444-4444", "NV");
 
         GuestRepository guestRepository = new GuestRepository(Test_Path);
 
