@@ -15,19 +15,19 @@ namespace DontWreckMyHouse.BLL
         {
             ReservationRepository = repo;
         }
-        public Result<List<Reservation>> GetReservationsByHostID(string hostID)
+        public void GetReservationsByHostID(string hostID, Result<List<Reservation>> result)
         {
-            Result<List<Reservation>> result = ReservationRepository.GetReservationsByHostID(hostID);
+            ReservationRepository.GetReservationsByHostID(hostID, result);
             if(result.Data == null)
             {
-                return result;
+                return;
             }
             if(result.Data.Count <= 0)
             {
                 result.Success = false;
                 result.Message = "No reservations found for the host.";
             }
-            return result;
+            return;
         }
 
         public Reservation Make(Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
@@ -51,7 +51,8 @@ namespace DontWreckMyHouse.BLL
 
         private int GetNextReservationID(string hostID)
         {
-            Result<List<Reservation>> reservations = ReservationRepository.GetReservationsByHostID(hostID);
+            Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            ReservationRepository.GetReservationsByHostID(hostID, reservations);
             return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
 
@@ -108,7 +109,8 @@ namespace DontWreckMyHouse.BLL
 
         private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result, int reservationID = 0)
         {
-            Result < List < Reservation >> reservations = GetReservationsByHostID(hostID);
+            Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            GetReservationsByHostID(hostID, reservations);
             if (reservations.Data.Any(r => ((startDate >= r.StartDate
                                         && startDate <= r.EndDate)
                                         || (endDate >= r.StartDate

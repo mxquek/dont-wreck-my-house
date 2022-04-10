@@ -42,7 +42,7 @@ namespace DontWreckMyHouse.UI
                         running = false;
                         break;
                     case MainMenuOption.ViewReservationsForHost:
-                        ViewReservationsForHost(GetHost(GetSearchOption("Host")).Data,new DateTime());
+                        ViewReservationsForHost(GetHost(GetSearchOption("Host")).Data);
                         break;
                     case MainMenuOption.MakeReservation:
                         MakeReservation();
@@ -56,47 +56,73 @@ namespace DontWreckMyHouse.UI
                 }
             }
         }
-        public Result<List<Reservation>> ViewReservationsForHost(Host host,DateTime startingViewDate, Guest guest = null)
+        public void ViewReservationsForHost(Host host,DateTime startingViewDate = new DateTime(), Guest guest = null)
         {
             Result<List<Reservation>> result = new Result<List<Reservation>>();
-            if (host== null)
+            result.Data = new List<Reservation>();
+
+            GetReservationsForHost(host, result);
+            if(result.Success == false)
             {
-                result.Success = false;
-                result.Message = "Valid host required.";
-                return result;
+                _View.DisplayStatus(result.Success, result.Message);
+                return;
             }
 
-            //foreach reservation
-            result = _ReservationService.GetReservationsByHostID(host.ID);
+
+            DisplayHostReservations(host, result, startingViewDate, guest);
             if (result.Success == false)
             {
                 _View.DisplayStatus(result.Success, result.Message);
-                return result;
+                return;
             }
 
-            _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
+            return;
+        }
+
+        public void GetReservationsForHost(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime())
+        {
+            if (host == null)
+            {
+                result.Success = false;
+                result.Message = "Valid host required.";
+                return;
+            }
+
+            _ReservationService.GetReservationsByHostID(host.ID, result);
+            if (result.Success == false)
+            {
+                return;
+            }
 
             result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
                                                     .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
-            if(guest != null)
+            result.Success = true;
+        }
+
+        public void DisplayHostReservations(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
+        {
+            _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
+
+            //result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
+            //                                        .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
+            if (guest != null)
             {
                 result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
             }
 
-            if(startingViewDate > DateTime.MinValue && result.Data.Count() == 0)
+            if (startingViewDate > DateTime.MinValue && result.Data.Count() == 0)
             {
                 result.Success = false;
                 result.Message = $"{host.LastName} has no future reservations.";
                 _View.DisplayMessage(result.Message);
-                return result;
+                return;
             }
             foreach (Reservation reservation in result.Data)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
-//                _View.DisplayStatus(guestResult.Success, guestResult.Message);
+                //                _View.DisplayStatus(guestResult.Success, guestResult.Message);
                 _View.DisplayReservation(reservation, guestResult.Data);
             }
-            return result;
         }
 
         public SearchOption GetSearchOption(string person)
@@ -172,8 +198,11 @@ namespace DontWreckMyHouse.UI
             Result<Reservation> result = new Result<Reservation>();
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
-            Result<List<Reservation>> reservations = ViewReservationsForHost(host, DateTime.Now, guest);
+
+            Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            GetReservationsForHost(host, reservations, DateTime.Now);
             if (reservations.Success == false) { return; }
+
             Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data, guest);
             DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
             DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
@@ -201,8 +230,9 @@ namespace DontWreckMyHouse.UI
         {
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
-            Result<List<Reservation>> reservations = ViewReservationsForHost(host, DateTime.Now, guest);
-            if(reservations.Success == false) { return; }
+            Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            GetReservationsForHost(host, reservations, DateTime.Now);
+            if (reservations.Success == false) { return; }
             Result<Reservation> result = _ReservationService.Remove(_View.ChooseReservation(reservations.Data, guest).Data, host.ID);
             _View.DisplayStatus(result.Success, result.Message);
         }

@@ -20,7 +20,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             throw new NotImplementedException();
         }
 
-        public Result<List<Reservation>> GetReservationsByHostID(string hostID)
+        public void GetReservationsByHostID(string HostID, Result<List<Reservation>> result)
         {
             throw new NotImplementedException();
         }

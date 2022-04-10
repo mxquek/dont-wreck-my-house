@@ -18,11 +18,8 @@ namespace DontWreckMyHouse.DAL
             _Path = directory;
         }
 
-        public Result<List<Reservation>> GetReservationsByHostID(string HostID)
+        public void GetReservationsByHostID(string HostID, Result<List<Reservation>> result)
         {
-            Result<List<Reservation>> result = new Result<List<Reservation>>();
-            result.Data = new List<Reservation>();
-
             string filePath = GetFilePath(HostID);
 
             if (!File.Exists(filePath))
@@ -59,13 +56,14 @@ namespace DontWreckMyHouse.DAL
             }
             result.Data = result.Data.OrderBy(reservation => reservation.StartDate).ToList();
 
-            return result;
+            return;
         }
 
         public Result<Reservation> Add(Reservation reservation, string hostID)
         {
             Result<Reservation> result = new Result<Reservation>();
-            Result<List<Reservation>> all = GetReservationsByHostID(hostID);
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            GetReservationsByHostID(hostID, all);
             all.Data.Add(reservation);
             WriteToFile(all.Data, hostID);
             return result;
@@ -74,7 +72,8 @@ namespace DontWreckMyHouse.DAL
         public Result<Reservation> Remove(Reservation reservation, string hostID)
         {
             Result<Reservation> result = new Result<Reservation>();
-            Result<List<Reservation>> all = GetReservationsByHostID(hostID);
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            GetReservationsByHostID(hostID, all);
             all.Data.Remove(reservation);
             WriteToFile(all.Data, hostID);
             result.Success = true;
@@ -84,7 +83,8 @@ namespace DontWreckMyHouse.DAL
 
         public void Edit(Result<Reservation> updatedReservation, string hostID)
         {
-            Result<List<Reservation>> all = GetReservationsByHostID(hostID);
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            GetReservationsByHostID(hostID, all);
             int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());
 
             if (targetIndex == -1)

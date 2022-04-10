@@ -170,10 +170,10 @@ namespace DontWreckMyHouse.UI
                 result.Message = "No reservation found";
                 return result;
             }
-            //foreach(Reservation reservation in reservations)
-            //{
-            //    DisplayReservation(reservation, guest);
-            //}
+            foreach (Reservation reservation in reservations)
+            {
+                DisplayReservation(reservation, guest);
+            }
 
             while (true)
             {
