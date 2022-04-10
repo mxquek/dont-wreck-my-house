@@ -73,6 +73,12 @@ namespace DontWreckMyHouse.BLL
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
             reservations.Data = new List<Reservation>();
             ReservationRepository.GetReservationsByHostID(hostID, reservations);
+
+            //If host has no reservations, return reservation ID of 1
+            if(reservations.Data.Count == 0)
+            {
+                return 1;
+            }
             return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
         private decimal CalculateTotal(Host host, DateTime startDate, DateTime endDate)

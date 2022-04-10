@@ -60,11 +60,7 @@ namespace DontWreckMyHouse.DAL
             all.Data = new List<Reservation>();
 
             GetReservationsByHostID(hostID, all);
-            if(all.Success == false)
-            {
-                reservation.Success = false;
-                return;
-            }
+            //Don't check for success, as an empty list is acceptable
 
             all.Data.Add(reservation.Data);
             WriteToFile(all.Data, hostID);
