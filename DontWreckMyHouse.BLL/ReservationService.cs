@@ -1,20 +1,32 @@
 ﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
+using System.Linq;
 
 namespace DontWreckMyHouse.BLL
 {
     public class ReservationService
     {
+        public IHostRepository HostRepository;
+        public IGuestRepository GuestRepository;
         public IReservationRepository ReservationRepository;
         
-        public ReservationService(IReservationRepository repo)
+        public ReservationService(IHostRepository hostRepository, IGuestRepository guestRepository, IReservationRepository reservationRepo)
         {
-            ReservationRepository = repo;
+            HostRepository = hostRepository;
+            GuestRepository = guestRepository;
+            ReservationRepository = reservationRepo;
         }
 
         //Main Functions
         public void GetReservationsByHostID(string hostID, Result<List<Reservation>> result)
         {
+            Result<List<Host>> hosts = HostRepository.GetAll();
+            if(!hosts.Data.Any(host => host.ID == hostID))
+            {
+                result.Success = false;
+                result.Message = "Requested host does not exist";
+            }
+
             ReservationRepository.GetReservationsByHostID(hostID, result);
             if(result.Data == null)
             {
