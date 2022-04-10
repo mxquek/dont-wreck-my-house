@@ -298,7 +298,6 @@ namespace DontWreckMyHouse.UI
                 return;
             }
 
-
             Result<Reservation> result = new Result<Reservation>();
             result.Data = new Reservation();
             _View.ChooseReservation(reservations.Data, result);
@@ -306,7 +305,8 @@ namespace DontWreckMyHouse.UI
             {
                 _View.DisplayStatus(result.Success, result.Message);
             }
-             _ReservationService.Remove(result.Data, host.ID);
+
+            _ReservationService.Remove(result, host.ID);
             _View.DisplayStatus(result.Success, result.Message);
         }
 

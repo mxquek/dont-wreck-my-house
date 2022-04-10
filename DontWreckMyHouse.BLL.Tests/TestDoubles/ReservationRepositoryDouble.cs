@@ -25,7 +25,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             throw new NotImplementedException();
         }
 
-        public Result<Reservation> Remove(Reservation reservation, string hostID)
+        public void Remove(Result<Reservation> reservation, string hostID)
         {
             throw new NotImplementedException();
         }

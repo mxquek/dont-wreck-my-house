@@ -150,10 +150,10 @@ namespace DontWreckMyHouse.BLL
             return;
         }
 
-        public Result<Reservation> Remove(Reservation reservation, string hostID)
+        public void Remove(Result<Reservation> reservation, string hostID)
         {
-            Result<Reservation> result = ReservationRepository.Remove(reservation, hostID);
-            return result;
+            ReservationRepository.Remove(reservation, hostID);
+            return;
         }
 
         public void Edit(Result<Reservation> updatedReservation,string hostID)
