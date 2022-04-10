@@ -81,7 +81,7 @@ namespace DontWreckMyHouse.DAL
                 return;
             }
 
-            if(all.Data.Where(r => r.Equals(reservation)).ToList().Count == 0)
+            if(all.Data.Where(r => r.Equals(reservation.Data)).ToList().Count == 0)
             {
                 reservation.Success = false;
                 reservation.Message = $"Reservation ID {reservation.Data.ID} was not found. Exiting...";
@@ -106,6 +106,7 @@ namespace DontWreckMyHouse.DAL
             GetReservationsByHostID(hostID, all);
             if(all.Success == false)
             {
+                updatedReservation.Success = false;
                 return;
             }
             int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());

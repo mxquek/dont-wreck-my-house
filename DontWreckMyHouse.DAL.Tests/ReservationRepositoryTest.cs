@@ -138,6 +138,44 @@ namespace DontWreckMyHouse.DAL.Tests
             Assert.IsFalse(all.Data.Any(r => r.Equals(actual.Data)));
             Assert.AreEqual(all.Data.Count, 1);
         }
+        [Test]
+        public void Edit_GivenExistingReservation_EditsReservation()
+        {
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = new Reservation(H1R1);
+            actual.Data.StartDate = new DateTime(2022, 11, 12);
+            actual.Data.EndDate = new DateTime(2022, 11, 14);
+            actual.Data.Total = 125;
+
+            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID);
+            Assert.IsTrue(actual.Success);
+
+            //Assuming GetReservationByHostID is functional
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
+
+            Assert.IsTrue(all.Data.Any(r => r.Equals(actual.Data)));
+            Assert.AreEqual(all.Data.Count, 1);
+        }
+
+        [Test]
+        public void Edit_GivenNonexistentReservation_DoesNotEditReservation()
+        {
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = new Reservation();
+
+            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID);
+            Assert.IsFalse(actual.Success);
+
+            //Assuming GetReservationByHostID is functional
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
+
+            Assert.IsFalse(all.Data.Any(r => r.Equals(actual.Data)));
+            Assert.AreEqual(all.Data.Count, 1);
+        }
 
         [Test]
         public void Deserialize_StringReservation_ReturnsReservation()
