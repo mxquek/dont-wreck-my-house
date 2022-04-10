@@ -36,7 +36,16 @@ namespace DontWreckMyHouse.BLL
             result.Data = HostRepository.GetAll().Data
                     .Where(host => host.LastName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-
+            if(result.Data.Count == 0)
+            {
+                result.Success = false;
+                result.Message = $"No host's last name starts with \"{prefix}\".";
+            }
+            else
+            {
+                result.Success = true;
+                result.Message = "Hosts whose last names starts with \"{prefix}\" were found.";
+            }
             return result;
         }
     }

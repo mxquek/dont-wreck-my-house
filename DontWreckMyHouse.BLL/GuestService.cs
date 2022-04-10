@@ -25,7 +25,7 @@ namespace DontWreckMyHouse.BLL
             else
             {
                 result.Success = true;
-                //result.Message = $"Guest ID: {guestID} found.";
+                result.Message = $"Guest ID {guestID}: {result.Data.FirstName} {result.Data.LastName} found.";
             }
             return result;
         }

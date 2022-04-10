@@ -9,9 +9,10 @@ namespace DontWreckMyHouse.DAL.Tests
 {
     public class ReservationRepositoryTest
     {
-        static string CurrentDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        static string DATA_DIRECTORY = Path.Combine(CurrentDirectory, "data");
-        const string SEED_DIRECTORY = "seed";
+        static string CURRENT_DIRECTORY = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+        static string DATA_DIRECTORY = Path.Combine(CURRENT_DIRECTORY, "data");
+
+        static string SEED_DIRECTORY = "seed";
         static string SEED_DATA_DIRECTORY = "testReservationSeed";
 
         static string TEST_DIRECTORY = "test";
@@ -54,11 +55,6 @@ namespace DontWreckMyHouse.DAL.Tests
             
             reservationRepository = new ReservationRepository(Test_Path);
         }
-
-        
-        //Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
-
-        
 
         [Test]
         public void GetReservationsByHostID_GivenExistingHostID_GetsAllReservationsForHost()
