@@ -31,7 +31,7 @@ namespace DontWreckMyHouse.BLL.Tests
         public void FindByEmail_NonexistentHostEmail_ReturnsNull()
         {
             Host expected = null;
-            Result<Host> actual = hostService.FindByEmail("lemonade@yahoo.com");
+            Result<Host> actual = hostService.FindByEmail("NonexistentGuestEmail@yahoo.com");
 
             Assert.AreEqual(expected, actual.Data);
             Assert.IsFalse(actual.Success);
@@ -50,10 +50,10 @@ namespace DontWreckMyHouse.BLL.Tests
         }
 
         [Test]
-        public void FindByLastName_GivenNonexistentHostLastName_ReturnsNoHosts()
+        public void FindByLastName_NonexistentHostLastName_ReturnsNoHosts()
         {
             Result<List<Host>> actual = new Result<List<Host>>();
-            actual = hostService.FindByLastName("NonexistentLastName");
+            actual = hostService.FindByLastName("NonexistentHostLastName");
 
             Assert.AreEqual(actual.Data.Count, 0);
             Assert.IsFalse(actual.Success);

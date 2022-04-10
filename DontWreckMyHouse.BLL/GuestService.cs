@@ -55,7 +55,16 @@ namespace DontWreckMyHouse.BLL
             result.Data = GuestRepository.GetAll().Data
                           .Where(guest => guest.LastName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                           .ToList();
-
+            if (result.Data.Count == 0)
+            {
+                result.Success = false;
+                result.Message = $"No guest's last name starts with \"{prefix}\".";
+            }
+            else
+            {
+                result.Success = true;
+                result.Message = "Guests whose last names starts with \"{prefix}\" were found.";
+            }
             return result;
         }
     }

@@ -3,6 +3,8 @@ using DontWreckMyHouse.BLL.Tests.TestDoubles;
 using DontWreckMyHouse.Core.Models;
 using DontWreckMyHouse.DAL.Tests;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DontWreckMyHouse.BLL.Tests
 {
@@ -23,9 +25,31 @@ namespace DontWreckMyHouse.BLL.Tests
         public void FindByEmail_NonexistentGuestEmail_ReturnsNull()
         {
             Guest expected = null;
-            Result<Guest> actual = guestService.FindByEmail("NonexistentEmail@yahoo.com");
+            Result<Guest> actual = guestService.FindByEmail("NonexistentGuestEmail@yahoo.com");
 
             Assert.AreEqual(expected, actual.Data);
+            Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void FindByLastName_ExistingGuestLastName_ReturnsHost()
+        {
+            Guest expected = new Guest(GuestRepositoryTest.GUEST1);
+            Result<List<Guest>> actual = new Result<List<Guest>>();
+            actual = guestService.FindByLastName(GuestRepositoryTest.GUEST1.LastName);
+
+            Assert.AreEqual(actual.Data.Count, 1);
+            Assert.IsTrue(actual.Data.Any(guest => guest.Equals(expected)));
+            Assert.IsTrue(actual.Success);
+        }
+
+        [Test]
+        public void FindByLastName_NonexistentGuestLastName_ReturnsNoHosts()
+        {
+            Result<List<Guest>> actual = new Result<List<Guest>>();
+            actual = guestService.FindByLastName("NonexistentGuestLastName");
+
+            Assert.AreEqual(actual.Data.Count, 0);
             Assert.IsFalse(actual.Success);
         }
     }
