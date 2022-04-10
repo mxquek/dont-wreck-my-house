@@ -32,28 +32,28 @@ namespace DontWreckMyHouse.BLL
             return;
         }
 
-        public Reservation Make(Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
+        public void Make(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
         {
-            Reservation reservation = new Reservation();
-            Validate(host, guest, startDate, endDate, oldReservationID);
+            Validate(result, host, guest, startDate, endDate, oldReservationID);
             if (oldReservationID == 0)
             {
-                reservation.ID = GetNextReservationID(host.ID);
+                result.Data.ID = GetNextReservationID(host.ID);
             }
             else
             {
-                reservation.ID = oldReservationID;
+                result.Data.ID = oldReservationID;
             }
-            reservation.StartDate = startDate;
-            reservation.EndDate = endDate;
-            reservation.GuestID = guest.ID;
-            reservation.Total = CalculateTotal(host, startDate, endDate);
-            return reservation;
+            result.Data.StartDate = startDate;
+            result.Data.EndDate = endDate;
+            result.Data.GuestID = guest.ID;
+            result.Data.Total = CalculateTotal(host, startDate, endDate);
+            return;
         }
 
         private int GetNextReservationID(string hostID)
         {
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            reservations.Data = new List<Reservation>();
             ReservationRepository.GetReservationsByHostID(hostID, reservations);
             return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
@@ -76,9 +76,8 @@ namespace DontWreckMyHouse.BLL
             return total;
         }
 
-        private Result<Reservation> Validate(Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
+        private Result<Reservation> Validate(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
         {
-            Result<Reservation> result = new Result<Reservation>();
             ValidateNulls(host, guest, startDate, endDate, result);
             ValidateReservationPeriod(host.ID,startDate,endDate,result,reservationID);
 
@@ -112,6 +111,7 @@ namespace DontWreckMyHouse.BLL
         private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result, int reservationID = 0)
         {
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            reservations.Data = new List<Reservation>();
             GetReservationsByHostID(hostID, reservations);
             if (reservations.Data.Any(r => ((startDate >= r.StartDate
                                         && startDate <= r.EndDate)
