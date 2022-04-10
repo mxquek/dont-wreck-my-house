@@ -38,8 +38,8 @@ namespace DontWreckMyHouse.DAL.Tests
         [Test]
         public void Deserialize_StringHost_ReturnsHost()
         {
-            Host expected = new Host("GUID-####", "Doe", "JaneDoe@gmail.com", "(123) 123-4567", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50);
-            string stringHost = "GUID-####,Doe,JaneDoe@gmail.com,(123) 123-4567,1212 Everlane Rd,Buffalo,NY,14201,25,50";
+            Host expected = new Host(HOST1);
+            string stringHost = "GUID-1111,Doe,JaneDoe@gmail.com,(111) 111-1111,1212 Everlane Rd,Buffalo,NY,14201,25,50";
             Host actual = hostRepository.Deserialize(stringHost);
 
             Assert.AreEqual(expected, actual);

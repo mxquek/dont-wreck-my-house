@@ -18,6 +18,9 @@ namespace DontWreckMyHouse.DAL.Tests
         string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
         static string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
 
+        static Guest GUEST1 = new Guest(1, "John", "Smith", "JohnSmith@gmail.com", "(333) 333-3333", "TX");
+        static Guest GUEST2 = new Guest(2, "Terry", "Bob", "TBob@yahoo.com", "(444) 444-4444", "NV");
+
         GuestRepository guestRepository = new GuestRepository(Test_Path);
 
         [SetUp]
@@ -35,10 +38,8 @@ namespace DontWreckMyHouse.DAL.Tests
         {
             Result<List<Guest>> expected = new Result<List<Guest>>();
             expected.Data = new List<Guest>();
-            Guest guest1 = new Guest(1, "Sullivan", "Lomas", "slomas0@mediafire.com", "(702) 7768761", "NV");
-            Guest guest2 = new Guest(2, "Olympie", "Gecks", "ogecks1@dagondesign.com", "(202) 2528316", "DC");
-            expected.Data.Add(guest1);
-            expected.Data.Add(guest2);
+            expected.Data.Add(GUEST1);
+            expected.Data.Add(GUEST2);
 
             Result<List<Guest>> actual = guestRepository.GetAll();
 
@@ -48,8 +49,8 @@ namespace DontWreckMyHouse.DAL.Tests
         [Test]
         public void Deserialize_StringGuest_ReturnsGuest()
         {
-            Guest expected = new Guest(1, "John", "Smith", "JohnSmith@gmail.com", "(727) 123-4567", "TX");
-            string stringGuest = "1,John,Smith,JohnSmith@gmail.com,(727) 123-4567,TX";
+            Guest expected = new Guest(GUEST1);
+            string stringGuest = "1,John,Smith,JohnSmith@gmail.com,(333) 333-3333,TX";
             Guest actual = guestRepository.Deserialize(stringGuest);
 
             Assert.AreEqual(expected, actual);

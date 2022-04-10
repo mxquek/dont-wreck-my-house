@@ -11,6 +11,15 @@ namespace DontWreckMyHouse.Core.Models
         public string State { get; set; }
 
         public Guest() { }
+        public Guest(Guest existingGuest)
+        {
+            ID = existingGuest.ID;
+            FirstName = existingGuest.FirstName;
+            LastName = existingGuest.LastName;
+            Email = existingGuest.Email;
+            PhoneNumber = existingGuest.PhoneNumber;
+            State = existingGuest.State;
+        }
         public Guest (int id, string firstName, string lastName, string email, string phone, string state)
         {
             ID = id;
