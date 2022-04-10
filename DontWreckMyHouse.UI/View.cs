@@ -160,16 +160,15 @@ namespace DontWreckMyHouse.UI
             return result;
         }
 
-        public Result<Reservation> ChooseReservation(List<Reservation> reservations)
+        public void ChooseReservation(List<Reservation> reservations, Result<Reservation> result)
         {
-            Result<Reservation> result = new Result<Reservation>();
             result.Success = true;
 
             if (reservations == null || reservations.Count == 0)
             {
                 result.Success = false;
                 result.Message = "No reservation found";
-                return result;
+                return;
             }
 
             while (true)
@@ -193,7 +192,7 @@ namespace DontWreckMyHouse.UI
                     break;
                 }
             }
-            return result;
+            return;
         }
         //Display Methods
         public void DisplayHeader(string message)

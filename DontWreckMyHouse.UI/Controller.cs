@@ -216,9 +216,6 @@ namespace DontWreckMyHouse.UI
         }
         public void EditReservation()
         {
-            Result<Reservation> result = new Result<Reservation>();
-            result = new Result<Reservation>();
-
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
 
@@ -239,12 +236,17 @@ namespace DontWreckMyHouse.UI
                 return;
             }
 
-            Result<Reservation> oldReservation = _View.ChooseReservation(reservations.Data);
-            if(oldReservation.Success == false)
+            Result<Reservation> oldReservation = new Result<Reservation>();
+            oldReservation.Data = new Reservation();
+            _View.ChooseReservation(reservations.Data,oldReservation);
+            if (oldReservation.Success == false)
             {
                 _View.DisplayStatus(oldReservation.Success, oldReservation.Message);
                 return;
             }
+
+            Result<Reservation> result = new Result<Reservation>();
+            result.Data = new Reservation();
 
             DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
             DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
@@ -280,6 +282,7 @@ namespace DontWreckMyHouse.UI
             Host host = GetHost(GetSearchOption("Host")).Data;
             Guest guest = GetGuest(GetSearchOption("Guest")).Data;
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
+            reservations.Data = new List<Reservation>();
             DateTime future = DateTime.Now.AddDays(1);
 
             GetReservationsForHost(host, reservations, future);
@@ -295,7 +298,15 @@ namespace DontWreckMyHouse.UI
                 return;
             }
 
-            Result<Reservation> result = _ReservationService.Remove(_View.ChooseReservation(reservations.Data).Data, host.ID);
+
+            Result<Reservation> result = new Result<Reservation>();
+            result.Data = new Reservation();
+            _View.ChooseReservation(reservations.Data, result);
+            if(result.Success == false)
+            {
+                _View.DisplayStatus(result.Success, result.Message);
+            }
+             _ReservationService.Remove(result.Data, host.ID);
             _View.DisplayStatus(result.Success, result.Message);
         }
 
