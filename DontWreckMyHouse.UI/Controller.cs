@@ -1,10 +1,5 @@
 ﻿using DontWreckMyHouse.BLL;
 using DontWreckMyHouse.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DontWreckMyHouse.UI
 {
@@ -22,13 +17,14 @@ namespace DontWreckMyHouse.UI
             _GuestService = guestService;
             _View = view;
         }
+
+        //Running Application
         public void Run()
         {
             _View.DisplayHeader("Welcome to Dont Wreck My House!");
             RunAppLoop();
             _View.DisplayHeader("Exiting");
         }
-
         public void RunAppLoop()
         {
             MainMenuOption option;
@@ -56,6 +52,8 @@ namespace DontWreckMyHouse.UI
                 }
             }
         }
+
+        //Main Menu Options
         public void ViewReservationsForHost(Host host,DateTime startingViewDate = new DateTime(), Guest guest = null)
         {
             Result<List<Reservation>> result = new Result<List<Reservation>>();
@@ -76,114 +74,6 @@ namespace DontWreckMyHouse.UI
             }
 
             return;
-        }
-
-        public void GetReservationsForHost(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
-        {
-            if (host == null)
-            {
-                result.Success = false;
-                result.Message = "Valid host required.";
-                return;
-            }
-
-            _ReservationService.GetReservationsByHostID(host.ID, result);
-            if (result.Success == false)
-            {
-                return;
-            }
-
-            result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
-                                                    .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
-            if (guest != null)
-            {
-                result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
-            }
-
-            result.Success = true;
-        }
-
-        public void DisplayHostReservations(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
-        {
-            if (host == null)
-            {
-                result.Success = false;
-                result.Message = "Valid host required.";
-                return;
-            }
-
-            _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
-
-            result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
-                                                    .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
-            if (guest != null)
-            {
-                result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
-            }
-
-            if (startingViewDate > DateTime.MinValue && result.Data.Count() == 0)
-            {
-                result.Success = false;
-                result.Message = $"{host.LastName} has no reservations on or after {startingViewDate:MM/dd/yyyy}.";
-                _View.DisplayMessage(result.Message);
-                return;
-            }
-            foreach (Reservation reservation in result.Data)
-            {
-                Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
-                _View.DisplayReservation(reservation, guestResult.Data);
-            }
-            result.Success = true;
-        }
-
-        public SearchOption GetSearchOption(string person)
-        {
-            SearchOption option = _View.SelectSearchOption(person);
-            return option;
-        }
-
-        public Result<Host> GetHost(SearchOption option)
-        {
-            Result<Host> hostResult = new Result<Host>();
-            switch (option)
-            {
-                case SearchOption.Exit:
-                    hostResult.Success = false;
-                    hostResult.Message = "Exiting Select Host Menu...";
-                    break;
-                case SearchOption.SearchByEmail:
-                    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
-                    break;
-                case SearchOption.PickFromList:
-                    Result<List<Host>> hosts = _HostService.FindByLastName(_View.GetNamePrefix("Host"));
-                    hostResult = _View.ChooseHost(hosts.Data);
-                    break;
-            }
-            
-            _View.DisplayStatus(hostResult.Success, hostResult.Message);
-
-            return hostResult;
-        }
-
-        public Result<Guest> GetGuest(SearchOption option)
-        {
-            Result<Guest> guestResult = new Result<Guest>();
-            switch (option)
-            {
-                case SearchOption.Exit:
-                    guestResult.Success = false;
-                    guestResult.Message = "Exiting Select Guest Menu...";
-                    break;
-                case SearchOption.SearchByEmail:
-                    guestResult = _GuestService.FindByEmail(_View.GetEmail("Guest"));
-                    break;
-                case SearchOption.PickFromList:
-                    Result<List<Guest>> guests = _GuestService.FindByLastName(_View.GetNamePrefix("Guest"));
-                    guestResult = _View.ChooseGuest(guests.Data);
-                    break;
-            }
-            _View.DisplayStatus(guestResult.Success, guestResult.Message);
-            return guestResult;
         }
         public void MakeReservation()
         {
@@ -248,8 +138,8 @@ namespace DontWreckMyHouse.UI
             Result<Reservation> result = new Result<Reservation>();
             result.Data = new Reservation();
 
-            DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}): ");
-            DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}): ");
+            DateTime? newStartDate = _View.GetOptionalFutureDate($"Start ({oldReservation.Data.StartDate:MM/dd/yyyy}) ");
+            DateTime? newEndDate = _View.GetOptionalFutureDate($"End ({oldReservation.Data.EndDate:MM/dd/yyyy}) ");
             if (newStartDate == null)
             {
                 newStartDate = oldReservation.Data.StartDate;
@@ -310,8 +200,114 @@ namespace DontWreckMyHouse.UI
             _View.DisplayStatus(result.Success, result.Message);
         }
 
-        
+        //Get Component Methods
+        public SearchOption GetSearchOption(string person)
+        {
+            SearchOption option = _View.SelectSearchOption(person);
+            return option;
+        }
+        public Result<Host> GetHost(SearchOption option)
+        {
+            Result<Host> hostResult = new Result<Host>();
+            switch (option)
+            {
+                case SearchOption.Exit:
+                    hostResult.Success = false;
+                    hostResult.Message = "Exiting Select Host Menu...";
+                    break;
+                case SearchOption.SearchByEmail:
+                    hostResult = _HostService.FindByEmail(_View.GetEmail("Host"));
+                    break;
+                case SearchOption.PickFromList:
+                    Result<List<Host>> hosts = _HostService.FindByLastName(_View.GetNamePrefix("Host"));
+                    hostResult = _View.ChooseHost(hosts.Data);
+                    break;
+            }
 
-        
+            _View.DisplayStatus(hostResult.Success, hostResult.Message);
+
+            return hostResult;
+        }
+        public Result<Guest> GetGuest(SearchOption option)
+        {
+            Result<Guest> guestResult = new Result<Guest>();
+            switch (option)
+            {
+                case SearchOption.Exit:
+                    guestResult.Success = false;
+                    guestResult.Message = "Exiting Select Guest Menu...";
+                    break;
+                case SearchOption.SearchByEmail:
+                    guestResult = _GuestService.FindByEmail(_View.GetEmail("Guest"));
+                    break;
+                case SearchOption.PickFromList:
+                    Result<List<Guest>> guests = _GuestService.FindByLastName(_View.GetNamePrefix("Guest"));
+                    guestResult = _View.ChooseGuest(guests.Data);
+                    break;
+            }
+            _View.DisplayStatus(guestResult.Success, guestResult.Message);
+            return guestResult;
+        }
+
+        //Helper Methods
+        public void GetReservationsForHost(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
+        {
+            if (host == null)
+            {
+                result.Success = false;
+                result.Message = "Valid host required.";
+                return;
+            }
+
+            _ReservationService.GetReservationsByHostID(host.ID, result);
+            if (result.Success == false)
+            {
+                return;
+            }
+
+            result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
+                                                    .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
+            if (guest != null)
+            {
+                result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
+            }
+
+            result.Success = true;
+        }
+        public void DisplayHostReservations(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
+        {
+            if (host == null)
+            {
+                result.Success = false;
+                result.Message = "Valid host required.";
+                return;
+            }
+
+            _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
+
+            result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
+                                                    .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
+            if (guest != null)
+            {
+                result.Data = result.Data.Where(reservation => reservation.GuestID == guest.ID).ToList();
+            }
+
+            if (startingViewDate > DateTime.MinValue && result.Data.Count() == 0)
+            {
+                result.Success = false;
+                result.Message = $"{host.LastName} has no reservations on or after {startingViewDate:MM/dd/yyyy}.";
+                _View.DisplayMessage(result.Message);
+                return;
+            }
+            foreach (Reservation reservation in result.Data)
+            {
+                Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
+                _View.DisplayReservation(reservation, guestResult.Data);
+            }
+            result.Success = true;
+        }
+
+
+
     }
 }

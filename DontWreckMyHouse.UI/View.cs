@@ -1,9 +1,4 @@
 ﻿using DontWreckMyHouse.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DontWreckMyHouse.UI
 {
@@ -14,6 +9,8 @@ namespace DontWreckMyHouse.UI
         {
             _IO = io;
         }
+
+        
         public MainMenuOption SelectMainMenuOption()
         {
             DisplayHeader("Main Menu");
@@ -52,13 +49,12 @@ namespace DontWreckMyHouse.UI
         {
             return _IO.ReadRequiredString($"{person} last name starts with: ");
         }
-
         public DateTime GetFutureDate(string message)
         {
             DateTime result = new DateTime();
             while (true)
             {
-                result = _IO.ReadRequiredDate(message + " (MM/dd/yyyy): ");
+                result = _IO.ReadRequiredDate(message + " [MM/dd/yyyy]: ");
                 if (result < DateTime.Now)
                 {
                     _IO.Error("Date must be in the future.");
@@ -72,7 +68,7 @@ namespace DontWreckMyHouse.UI
             DateTime? result = new DateTime();
             while (true)
             {
-                result = _IO.ReadOptionalDate(message + " (MM/dd/yyyy): ");
+                result = _IO.ReadOptionalDate(message + " [MM/dd/yyyy]: ");
                 if(result == null)
                 {
                     break;
@@ -121,7 +117,6 @@ namespace DontWreckMyHouse.UI
             result.Message = $"Host {result.Data.LastName} was chosen.";
             return result;
         }
-
         public Result<Guest> ChooseGuest(List<Guest> guests)
         {
             Result<Guest> result = new Result<Guest>();
@@ -159,7 +154,6 @@ namespace DontWreckMyHouse.UI
             result.Message = $"Guest {result.Data.LastName} was chosen.";
             return result;
         }
-
         public void ChooseReservation(List<Reservation> reservations, Result<Reservation> result)
         {
             result.Success = true;
@@ -194,6 +188,16 @@ namespace DontWreckMyHouse.UI
             }
             return;
         }
+
+        public bool ReservationConfirmation(Reservation reservation)
+        {
+            DisplayHeader("Summary");
+            _IO.PrintLine($"Start: {reservation.StartDate:MM/dd/yyyy}");
+            _IO.PrintLine($"End: {reservation.EndDate:MM/dd/yyyy}");
+            _IO.PrintLine($"Total: {reservation.Total:C}");
+            return _IO.ReadBool("Is this okay? [y/n]: ");
+        }
+
         //Display Methods
         public void DisplayHeader(string message)
         {
@@ -205,7 +209,6 @@ namespace DontWreckMyHouse.UI
         {
             _IO.PrintLine(message);
         }
-
         public void DisplayStatus(bool success, string message)
         {
             if (success)
@@ -217,21 +220,10 @@ namespace DontWreckMyHouse.UI
                 _IO.Error(message);
             }
         }
-
         public void DisplayReservation(Reservation reservation, Guest guest)
         {
             _IO.PrintLine($"ID: {reservation.ID:D2}, {reservation.StartDate:MM/dd/yyyy} - {reservation.EndDate:MM/dd/yyyy}," +
                             $"Guest: {guest.LastName}, {guest.FirstName}, Email: {guest.Email}");
         }
-        public bool ReservationConfirmation(Reservation reservation)
-        {
-            DisplayHeader("Summary");
-            _IO.PrintLine($"Start: {reservation.StartDate:MM/dd/yyyy}");
-            _IO.PrintLine($"End: {reservation.EndDate:MM/dd/yyyy}");
-            _IO.PrintLine($"Total: {reservation.Total:C}");
-            return _IO.ReadBool("Is this okay? [y/n]: ");
-        }
-
-
     }
 }

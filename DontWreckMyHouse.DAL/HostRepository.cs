@@ -11,6 +11,7 @@ namespace DontWreckMyHouse.DAL
         {
             _Path = path;
         }
+
         public Result<List<Host>> GetAll()
         {
             Result<List<Host>> result = new Result<List<Host>>();

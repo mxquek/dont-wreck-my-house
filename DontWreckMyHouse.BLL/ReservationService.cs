@@ -1,20 +1,18 @@
 ﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DontWreckMyHouse.BLL
 {
     public class ReservationService
     {
         public IReservationRepository ReservationRepository;
+        
         public ReservationService(IReservationRepository repo)
         {
             ReservationRepository = repo;
         }
+
+        //Main Functions
         public void GetReservationsByHostID(string hostID, Result<List<Reservation>> result)
         {
             ReservationRepository.GetReservationsByHostID(hostID, result);
@@ -31,11 +29,28 @@ namespace DontWreckMyHouse.BLL
             }
             return;
         }
+        public void Add(Result<Reservation> reservation, string hostID)
+        {
+            ReservationRepository.Add(reservation, hostID);
+            return;
+        }
+        public void Remove(Result<Reservation> reservation, string hostID)
+        {
+            ReservationRepository.Remove(reservation, hostID);
+            return;
+        }
+        public void Edit(Result<Reservation> updatedReservation, string hostID)
+        {
+            ReservationRepository.Edit(updatedReservation, hostID);
 
+            return;
+        }
+
+        //Supporting Methods
         public void Make(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
         {
             Validate(result, host, guest, startDate, endDate, oldReservationID);
-            if(result.Success == false)
+            if (result.Success == false)
             {
                 return;
             }
@@ -53,7 +68,6 @@ namespace DontWreckMyHouse.BLL
             result.Data.Total = CalculateTotal(host, startDate, endDate);
             return;
         }
-
         private int GetNextReservationID(string hostID)
         {
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
@@ -61,7 +75,6 @@ namespace DontWreckMyHouse.BLL
             ReservationRepository.GetReservationsByHostID(hostID, reservations);
             return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
-
         private decimal CalculateTotal(Host host, DateTime startDate, DateTime endDate)
         {
             decimal total = 0;
@@ -80,6 +93,7 @@ namespace DontWreckMyHouse.BLL
             return total;
         }
 
+        //Validation
         private void Validate(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
         {
             ValidateNulls(host, guest, startDate, endDate, result);
@@ -87,7 +101,6 @@ namespace DontWreckMyHouse.BLL
 
             return;
         }
-
         private void ValidateNulls(Host host, Guest guest, DateTime startDate, DateTime endDate, Result<Reservation> result)
         {
             if(host == null)
@@ -119,7 +132,6 @@ namespace DontWreckMyHouse.BLL
                 result.Success = true;
             }
         }
-
         private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result, int reservationID = 0)
         {
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
@@ -144,23 +156,6 @@ namespace DontWreckMyHouse.BLL
             result.Success = true;
         }
 
-        public void Add(Result<Reservation> reservation, string hostID)
-        {
-            ReservationRepository.Add(reservation, hostID);
-            return;
-        }
-
-        public void Remove(Result<Reservation> reservation, string hostID)
-        {
-            ReservationRepository.Remove(reservation, hostID);
-            return;
-        }
-
-        public void Edit(Result<Reservation> updatedReservation,string hostID)
-        {
-            ReservationRepository.Edit(updatedReservation, hostID);
-
-            return;
-        }
+        
     }
 }

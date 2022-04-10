@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace DontWreckMyHouse.Core.Models
 {
     public class Guest
@@ -36,7 +31,6 @@ namespace DontWreckMyHouse.Core.Models
                    PhoneNumber == guest.PhoneNumber &&
                    State == guest.State;
         }
-
         public override int GetHashCode()
         {
             return HashCode.Combine(ID, FirstName, LastName, Email, PhoneNumber, State);

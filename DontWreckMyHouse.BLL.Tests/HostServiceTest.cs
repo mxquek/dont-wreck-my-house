@@ -1,6 +1,5 @@
 using DontWreckMyHouse.BLL.Tests.TestDoubles;
 using DontWreckMyHouse.Core.Models;
-using DontWreckMyHouse.DAL;
 using NUnit.Framework;
 
 namespace DontWreckMyHouse.BLL.Tests

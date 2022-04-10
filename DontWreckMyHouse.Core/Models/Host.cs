@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace DontWreckMyHouse.Core.Models
 {
     public class Host
@@ -33,7 +28,6 @@ namespace DontWreckMyHouse.Core.Models
             StandardRate = copy.StandardRate;
             WeekendRate = copy.WeekendRate;
         }
-
         public Host(string id, string lastName, string email, string phoneNumber, string address, string city, string state, string postalCode, decimal standardRate, decimal weekendRate)
         {
             ID = id;
@@ -61,7 +55,6 @@ namespace DontWreckMyHouse.Core.Models
                    StandardRate == host.StandardRate &&
                    WeekendRate == host.WeekendRate;
         }
-
         public override int GetHashCode()
         {
             return HashCode.Combine(ID, LastName, Email, PhoneNumber, Address, City, State, PostalCode);

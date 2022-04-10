@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace DontWreckMyHouse.Core.Models
 {
     public class Reservation
@@ -17,14 +12,6 @@ namespace DontWreckMyHouse.Core.Models
         public Reservation() 
         {
         }
-        public Reservation(int id, DateTime startDate, DateTime endDate, int guestID, decimal total)
-        {
-            ID = id;
-            StartDate = startDate;
-            EndDate = endDate;
-            GuestID = guestID;
-            Total = total;
-        }
         public Reservation(Reservation existingReservation)
         {
             ID = existingReservation.ID;
@@ -32,6 +19,14 @@ namespace DontWreckMyHouse.Core.Models
             EndDate = existingReservation.EndDate;
             GuestID = existingReservation.GuestID;
             Total = existingReservation.Total;
+        }
+        public Reservation(int id, DateTime startDate, DateTime endDate, int guestID, decimal total)
+        {
+            ID = id;
+            StartDate = startDate;
+            EndDate = endDate;
+            GuestID = guestID;
+            Total = total;
         }
 
         public override bool Equals(object? obj)

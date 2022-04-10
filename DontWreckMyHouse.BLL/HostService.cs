@@ -1,6 +1,5 @@
 ﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
-using System.Linq;
 
 namespace DontWreckMyHouse.BLL
 {
@@ -12,6 +11,7 @@ namespace DontWreckMyHouse.BLL
         {
             HostRepository = repo;
         }
+        
         public Result<Host> FindByEmail(string email)
         {
             Result<List<Host>> hosts = HostRepository.GetAll();
@@ -30,7 +30,6 @@ namespace DontWreckMyHouse.BLL
             
             return result;
         }
-
         public Result<List<Host>> FindByLastName(string prefix)
         {
             Result<List<Host>> result = new Result<List<Host>>();

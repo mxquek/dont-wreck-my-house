@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace DontWreckMyHouse.UI
 {
     public class ConsoleIO
@@ -18,6 +13,7 @@ namespace DontWreckMyHouse.UI
             = "[INVALID] Enter a date in MM/dd/yyyy format.";
         private const string INVALID_BOOL
             = "[INVALID] Please enter 'y' or 'n'.";
+
         private DateTime? _ReadDate(string prompt, bool nullable)
         {
             DateTime? result = null;
@@ -41,7 +37,6 @@ namespace DontWreckMyHouse.UI
         {
             Console.Write(message);
         }
-
         public void PrintLine(string message)
         {
             Console.WriteLine(message);
@@ -71,7 +66,6 @@ namespace DontWreckMyHouse.UI
             Print(prompt);
             return Console.ReadLine();
         }
-
         public string ReadRequiredString(string prompt)
         {
             while (true)
@@ -98,7 +92,6 @@ namespace DontWreckMyHouse.UI
                 PrintLine(INVALID_NUMBER);
             }
         }
-
         public decimal ReadDecimal(string prompt, decimal min, decimal max)
         {
             while (true)
@@ -125,7 +118,6 @@ namespace DontWreckMyHouse.UI
                 PrintLine(INVALID_NUMBER);
             }
         }
-
         public int ReadInt(string prompt, int min, int max)
         {
             while (true)
@@ -160,7 +152,6 @@ namespace DontWreckMyHouse.UI
         {
             return (DateTime)_ReadDate(prompt, false);
         }
-
         public DateTime? ReadOptionalDate(string prompt)
         {
             return _ReadDate(prompt, true);

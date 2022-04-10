@@ -1,20 +1,17 @@
 ﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DontWreckMyHouse.BLL
 {
     public class GuestService
     {
         public IGuestRepository GuestRepository;
+
         public GuestService(IGuestRepository repo)
         {
             GuestRepository = repo;
         }
+
         public Result<Guest> FindByID(int guestID)
         {
             Result<List<Guest>> guests = GuestRepository.GetAll();
@@ -32,7 +29,6 @@ namespace DontWreckMyHouse.BLL
             }
             return result;
         }
-
         public Result<Guest> FindByEmail(string email)
         {
             Result<List<Guest>> guests = GuestRepository.GetAll();
@@ -51,7 +47,6 @@ namespace DontWreckMyHouse.BLL
 
             return result;
         }
-
         public Result<List<Guest>> FindByLastName(string prefix)
         {
             Result<List<Guest>> result = new Result<List<Guest>>();

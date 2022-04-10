@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DontWreckMyHouse.Core.Interfaces;
+﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
 
 namespace DontWreckMyHouse.DAL
@@ -18,6 +13,7 @@ namespace DontWreckMyHouse.DAL
             _Path = directory;
         }
 
+        //Main Functions
         public void GetReservationsByHostID(string HostID, Result<List<Reservation>> result)
         {
             string filePath = GetFilePath(HostID);
@@ -58,7 +54,6 @@ namespace DontWreckMyHouse.DAL
 
             return;
         }
-
         public void Add(Result<Reservation> reservation, string hostID)
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
@@ -78,7 +73,6 @@ namespace DontWreckMyHouse.DAL
             reservation.Message = $"Reservation {reservation.Data.ID} added.";
             return;
         }
-
         public void Remove(Result<Reservation> reservation, string hostID)
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
@@ -98,7 +92,6 @@ namespace DontWreckMyHouse.DAL
             reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
             return;
         }
-
         public void Edit(Result<Reservation> updatedReservation, string hostID)
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
@@ -129,6 +122,7 @@ namespace DontWreckMyHouse.DAL
             return;
         }
 
+        //File IO Functions
         public Reservation Deserialize(string data)
         {
             Reservation result = new Reservation();
@@ -145,6 +139,7 @@ namespace DontWreckMyHouse.DAL
         {
             return $"{reservation.ID},{reservation.StartDate:yyyy-MM-dd},{reservation.EndDate:yyyy-MM-dd},{reservation.GuestID},{reservation.Total}";
         }
+        
         private string GetFilePath(string hostID)
         {
             return Path.Combine(_Path, $"{hostID}.csv");
