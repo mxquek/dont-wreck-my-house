@@ -140,7 +140,7 @@ namespace DontWreckMyHouse.DAL
             return $"{reservation.ID},{reservation.StartDate:yyyy-MM-dd},{reservation.EndDate:yyyy-MM-dd},{reservation.GuestID},{reservation.Total}";
         }
         
-        private string GetFilePath(string hostID)
+        public string GetFilePath(string hostID)
         {
             return Path.Combine(_Path, $"{hostID}.csv");
         }

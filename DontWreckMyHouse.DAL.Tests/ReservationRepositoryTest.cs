@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DontWreckMyHouse.DAL.Tests
 {
@@ -51,6 +52,54 @@ namespace DontWreckMyHouse.DAL.Tests
         
         //Guest GUEST = new Guest(11, "Bob", "Jones", "BobJones@yahoo.com", "(111) 111-1111", "OH");
 
+        
+
+        [Test]
+        public void GetReservationsByHostID_GivenExistingHostID_GetsAllReservationsForHost()
+        {
+            List<Reservation> expected = new List<Reservation>();
+            expected.Add(new Reservation(H1R1));
+
+            Result<List<Reservation>> actual = new Result<List<Reservation>>();
+            actual.Data = new List<Reservation>();
+
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, actual);
+
+            Assert.AreEqual(expected.Count, actual.Data.Count);
+            Assert.AreEqual(expected, actual.Data);
+        }
+        [Test]
+        public void GetGetReservationsByHostID_GivenNonexistentHostID_GetsNoReservations()
+        {
+            List<Reservation> expected = new List<Reservation>();
+
+            Result<List<Reservation>> actual = new Result<List<Reservation>>();
+            actual.Data = new List<Reservation>();
+
+            reservationRepository.GetReservationsByHostID("NonexistentHostID", actual);
+
+            Assert.AreEqual(expected, actual.Data);
+        }
+        [Test]
+        public void Add_GivenReservation_AddReservation()
+        {
+            Reservation expected = new Reservation(H1R1);
+
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = new Reservation(H1R1);
+
+            reservationRepository.Add(actual, HostRepositoryTest.HOST1.ID);
+            Assert.IsTrue(actual.Success == true);
+
+            //Assuming GetReservationByHostID is functional
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
+
+            Assert.IsTrue(all.Data.Any(r => r.Equals(expected)));
+        }
+
+
         [Test]
         public void Deserialize_StringReservation_ReturnsReservation()
         {
@@ -66,7 +115,6 @@ namespace DontWreckMyHouse.DAL.Tests
 
             Assert.AreEqual(expected, actual);
         }
-
         [Test]
         public void Serialize_Reservation_ReturnsStringReservation()
         {
@@ -91,33 +139,6 @@ namespace DontWreckMyHouse.DAL.Tests
             reservationRepository.WriteToFile(new List<Reservation>(), "NonExistentFile");
             Assert.IsTrue(File.Exists(expectedPath));
         }
-
-        [Test]
-        public void GetReservationsByHostID_GivenExistingHostID_GetsAllReservationsForHost()
-        {
-            List<Reservation> expected = new List<Reservation>();
-            expected.Add(new Reservation(H1R1));
-
-            Result<List<Reservation>> actual = new Result<List<Reservation>>();
-            actual.Data = new List<Reservation>();
-
-            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, actual);
-
-            Assert.AreEqual(expected.Count, actual.Data.Count);
-            Assert.AreEqual(expected, actual.Data);
-        }
-
-        [Test]
-        public void GetGetReservationsByHostID_GivenNonexistentHostID_GetsNoReservations()
-        {
-            List<Reservation> expected = new List<Reservation>();
-
-            Result<List<Reservation>> actual = new Result<List<Reservation>>();
-            actual.Data = new List<Reservation>();
-
-            reservationRepository.GetReservationsByHostID("NonexistentHostID", actual);
-
-            Assert.AreEqual(expected, actual.Data);
-        }
     }
+
 }
