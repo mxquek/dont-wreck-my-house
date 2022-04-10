@@ -144,10 +144,10 @@ namespace DontWreckMyHouse.BLL
             result.Success = true;
         }
 
-        public Result<Reservation> Add(Reservation reservation, string hostID)
+        public void Add(Result<Reservation> reservation, string hostID)
         {
-            Result<Reservation> result = ReservationRepository.Add(reservation, hostID);
-            return result;
+            ReservationRepository.Add(reservation, hostID);
+            return;
         }
 
         public Result<Reservation> Remove(Reservation reservation, string hostID)

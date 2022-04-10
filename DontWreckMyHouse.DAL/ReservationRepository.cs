@@ -25,7 +25,7 @@ namespace DontWreckMyHouse.DAL
             if (!File.Exists(filePath))
             {
                 result.Success = false;
-                result.Message = "Host does not have any reservations.";
+                result.Message = "Host file does not exist.";
             }
 
             else
@@ -59,15 +59,24 @@ namespace DontWreckMyHouse.DAL
             return;
         }
 
-        public Result<Reservation> Add(Reservation reservation, string hostID)
+        public void Add(Result<Reservation> reservation, string hostID)
         {
-            Result<Reservation> result = new Result<Reservation>();
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
+
             GetReservationsByHostID(hostID, all);
-            all.Data.Add(reservation);
+            if(all.Success == false)
+            {
+                reservation.Success = false;
+                return;
+            }
+
+            all.Data.Add(reservation.Data);
             WriteToFile(all.Data, hostID);
-            return result;
+
+            reservation.Success = true;
+            reservation.Message = $"Reservation {reservation.Data.ID} added.";
+            return;
         }
 
         public Result<Reservation> Remove(Reservation reservation, string hostID)

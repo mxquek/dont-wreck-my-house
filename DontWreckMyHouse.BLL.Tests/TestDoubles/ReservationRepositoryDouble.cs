@@ -10,7 +10,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
 {
     public class ReservationRepositoryDouble : IReservationRepository
     {
-        public Result<Reservation> Add(Reservation reservation, string hostID)
+        public void Add(Result<Reservation> reservation, string hostID)
         {
             throw new NotImplementedException();
         }

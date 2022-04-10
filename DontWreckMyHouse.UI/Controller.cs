@@ -205,7 +205,7 @@ namespace DontWreckMyHouse.UI
 
             if(_View.ReservationConfirmation(result.Data))
             {
-                _ReservationService.Add(result.Data, host.ID);
+                _ReservationService.Add(result, host.ID);
             }
             else
             {
