@@ -55,6 +55,11 @@ namespace DontWreckMyHouse.BLL
         public void Remove(Result<Reservation> reservation, Host host)
         {
             ValidateReservation(reservation, host);
+            if (reservation.Success == false)
+            {
+                return;
+            }
+
             ReservationRepository.Remove(reservation, host.ID);
             return;
         }
@@ -67,7 +72,6 @@ namespace DontWreckMyHouse.BLL
             }
 
             ReservationRepository.Edit(updatedReservation, host.ID);
-
             return;
         }
 
@@ -111,9 +115,13 @@ namespace DontWreckMyHouse.BLL
         //Validation
         public void ValidateReservation (Result<Reservation> result, Host host)
         {
+            result.Success = true;
             ValidateNulls(result, host);
+            if(!result.Success) {return;}
             ValidateHost(result, host);
+            if (!result.Success) {return;}
             ValidateGuestID(result);
+            if (!result.Success) {return;}
             ValidateReservationDates(result,host.ID);
         }
 
@@ -130,10 +138,15 @@ namespace DontWreckMyHouse.BLL
                 result.Message = "Reservation cannot be empty";
             }
         }
-
         private void ValidateGuestID(Result<Reservation> result)
         {
-            if (GuestRepository.FindByID(result.Data.ID) == null)
+            if(result.Data.GuestID <= 0)
+            {
+                result.Success = false;
+                result.Message = "Invalid GuestID";
+                return;
+            }
+            if (GuestRepository.FindByID(result.Data.GuestID) == null)
             {
                 result.Success = false;
                 result.Message = "Guest does not exist";
@@ -145,12 +158,6 @@ namespace DontWreckMyHouse.BLL
         }
         private void ValidateHost(Result<Reservation> result, Host host)
         {
-            if(host == null)
-            {
-                result.Success = false;
-                result.Message = "Host does not exist";
-            }
-
             if (HostRepository.FindByID(host.ID) == null)
             {
                 result.Success = false;

@@ -10,8 +10,6 @@ namespace DontWreckMyHouse.BLL.Tests
     {
         ReservationService reservationService = new ReservationService(new HostRepositoryDouble(),new GuestRepositoryDouble(), new ReservationRepositoryDouble());
 
-
-
         [Test]
         public void GetReservationsByHostID_GivenExistingHostID_ReturnsListOfReservationsUnderHost()
         {
@@ -30,6 +28,73 @@ namespace DontWreckMyHouse.BLL.Tests
             reservationService.GetReservationsByHostID(actual, "NonexistentHostID");
 
             Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void Add_GivenNullHost_DoesNotAdd()
+        {
+            Host nullHost = null;
+
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = ReservationRepositoryTest.H1R2;
+
+            reservationService.Add(actual, nullHost);
+
+            Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void Add_GivenNullReservation_DoesNotAdd()
+        {
+            Host host = HostRepositoryTest.HOST1;
+
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = null;
+
+            reservationService.Add(actual, host);
+
+            Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void Add_GivenNonexistentGuestIDReservation_DoesNotAdd()
+        {
+            Host host = HostRepositoryTest.HOST1;
+
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = ReservationRepositoryTest.H1R1;
+            actual.Data.GuestID = 1000;
+
+            reservationService.Add(actual, host);
+
+            Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void Add_GivenInvalidGuestIDReservation_DoesNotAdd()
+        {
+            Host host = HostRepositoryTest.HOST1;
+
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = ReservationRepositoryTest.H1R1;
+            actual.Data.GuestID = -1000;
+
+            reservationService.Add(actual, host);
+
+            Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void Add_ValidReservation_AddsReservation()
+        {
+            Host host = HostRepositoryTest.HOST1;
+
+            Result<Reservation> actual = new Result<Reservation>();
+            actual.Data = ReservationRepositoryTest.H1R2;
+
+            reservationService.Add(actual, host);
+
+            Assert.IsTrue(actual.Success);
         }
     }
 
