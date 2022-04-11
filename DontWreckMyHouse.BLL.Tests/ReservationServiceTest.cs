@@ -17,6 +17,7 @@ namespace DontWreckMyHouse.BLL.Tests
             reservationService = new ReservationService(new HostRepositoryDouble(), new GuestRepositoryDouble(), new ReservationRepositoryDouble());
         }
 
+        //GetReservationsByHostID
         [Test]
         public void GetReservationsByHostID_GivenExistingHostID_ReturnsListOfReservationsUnderHost()
         {
@@ -50,6 +51,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.IsFalse(actual.Success);
         }
 
+        //Add
         [Test]
         public void Add_GivenNullHost_DoesNotAdd()
         {
@@ -117,7 +119,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.IsTrue(actual.Success);
         }
 
-
+        //Remove
         [Test]
         public void Remove_GivenExistingReservation_IsSuccessful()
         {
@@ -144,6 +146,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.AreEqual(all.Data.Count, 1);
         }
 
+        //Edit
         [Test]
         public void Edit_GivenExistingReservation_IsSuccessful()
         {
@@ -173,6 +176,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.AreEqual(all.Data.Count, 1);
         }
 
+        //GetNextReservationID
         [Test]
         public void GetNextReservationID_GivenHostWithReservations_ReturnsNextID()
         {
@@ -198,6 +202,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        //CalculateTotal
         [Test]
         public void CalculateTotal_GivenInfo_ReturnsTotal()
         {
@@ -207,6 +212,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        //ValidateReservation
         [Test]
         public void ValidateReservation_NullHost_IsUnsuccessful()
         {

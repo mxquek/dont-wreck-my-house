@@ -65,6 +65,11 @@ namespace DontWreckMyHouse.DAL
         {
             Host result = new Host();
             string[] fields = data.Split(",");
+            if (fields.Length != 10)
+            {
+                return null;
+            }
+
             result.ID = fields[0];
             result.LastName = fields[1];
             result.Email = fields[2];

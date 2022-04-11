@@ -36,10 +36,19 @@ namespace DontWreckMyHouse.DAL.Tests
         }
 
         [Test]
-        public void Deserialize_StringHost_ReturnsHost()
+        public void Deserialize_ValidStringHost_ReturnsHost()
         {
             Host expected = new Host(HOST1);
             string stringHost = "GUID-1111,Doe,JaneDoe@gmail.com,(111) 111-1111,1212 Everlane Rd,Buffalo,NY,14201,25,50";
+            Host actual = hostRepository.Deserialize(stringHost);
+
+            Assert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void Deserialize_InvalidStringHost_ReturnsHost()
+        {
+            Host expected = null;
+            string stringHost = "GUID-1111,Doe,JaneDoe@gmail.com,(111) 111-1111,1212 Everlane Rd,Buffalo,NY,14201,25,50,Extra";
             Host actual = hostRepository.Deserialize(stringHost);
 
             Assert.AreEqual(expected, actual);

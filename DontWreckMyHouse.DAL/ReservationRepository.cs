@@ -106,6 +106,12 @@ namespace DontWreckMyHouse.DAL
         {
             Reservation result = new Reservation();
             string[] fields = data.Split(",");
+
+            if (fields.Length != 5)
+            {
+                return null;
+            }
+
             result.ID = int.Parse(fields[0]);
             result.StartDate = DateTime.Parse(fields[1]);
             result.EndDate = DateTime.Parse(fields[2]);

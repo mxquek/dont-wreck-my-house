@@ -83,7 +83,7 @@ namespace DontWreckMyHouse.DAL.Tests
             Assert.AreEqual(expected, actual.Data);
         }
         [Test]
-        public void Add_GivenReservation_AddReservation()
+        public void Add_GivenValidReservation_AddReservation()
         {
             Result<Reservation> actual = new Result<Reservation>();
             actual.Data = new Reservation(H1R2);
@@ -140,7 +140,7 @@ namespace DontWreckMyHouse.DAL.Tests
         }
 
         [Test]
-        public void Deserialize_StringReservation_ReturnsReservation()
+        public void Deserialize_ValidStringReservation_ReturnsReservation()
         {
             Reservation expected = new Reservation();
             expected.ID = 1;
@@ -150,6 +150,23 @@ namespace DontWreckMyHouse.DAL.Tests
             expected.Total = 100;
 
             string stringReservation = $"{expected.ID},{expected.StartDate:yyyy-MM-dd},{expected.EndDate:yyyy-MM-dd},{expected.GuestID},{expected.Total}";
+            Reservation actual = reservationRepository.Deserialize(stringReservation);
+
+            Assert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void Deserialize_InvalidStringReservation_ReturnsReservation()
+        {
+            Reservation expected = new Reservation();
+            expected.ID = 1;
+            expected.StartDate = DateTime.Now.AddDays(-1).Date;
+            expected.EndDate = DateTime.Now.Date;
+            expected.GuestID = 1;
+            expected.Total = 100;
+
+            string stringReservation = $"{expected.ID},{expected.StartDate:yyyy-MM-dd},{expected.EndDate:yyyy-MM-dd},{expected.GuestID},{expected.Total},Extra";
+
+            expected = null;
             Reservation actual = reservationRepository.Deserialize(stringReservation);
 
             Assert.AreEqual(expected, actual);

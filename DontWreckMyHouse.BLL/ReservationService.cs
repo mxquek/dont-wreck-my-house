@@ -45,10 +45,7 @@ namespace DontWreckMyHouse.BLL
         public void Add(Result<Reservation> reservation, Host host)
         {
             ValidateReservation(reservation, host);
-            if(reservation.Success == false)
-            {
-                return;
-            }
+            if(reservation.Success == false) {return;}
 
             ReservationRepository.Add(reservation, host.ID);
             return;
@@ -56,10 +53,7 @@ namespace DontWreckMyHouse.BLL
         public void Remove(Result<Reservation> reservation, Host host)
         {
             ValidateReservation(reservation, host);
-            if (reservation.Success == false)
-            {
-                return;
-            }
+            if (reservation.Success == false) { return; }
 
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
@@ -77,19 +71,13 @@ namespace DontWreckMyHouse.BLL
                 reservation.Message = $"Reservation ID {reservation.Data.ID} was not found. Exiting...";
                 return;
             }
-            else
-            {
-                ReservationRepository.Remove(reservation, host.ID);
-            }
+            else { ReservationRepository.Remove(reservation, host.ID);}
             return;
         }
         public void Edit(Result<Reservation> updatedReservation, Host host)
         {
             ValidateReservation(updatedReservation, host);
-            if (updatedReservation.Success == false)
-            {
-                return;
-            }
+            if (updatedReservation.Success == false) { return; }
 
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
@@ -100,6 +88,7 @@ namespace DontWreckMyHouse.BLL
                 updatedReservation.Success = false;
                 return;
             }
+            
             int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());
 
             if (targetIndex == -1)
@@ -108,10 +97,7 @@ namespace DontWreckMyHouse.BLL
                 updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} not found.";
                 return;
             }
-            else
-            {
-                ReservationRepository.Edit(updatedReservation, host.ID, targetIndex);
-            }
+            else { ReservationRepository.Edit(updatedReservation, host.ID, targetIndex); }
             return;
         }
 
@@ -122,16 +108,11 @@ namespace DontWreckMyHouse.BLL
             reservations.Data = new List<Reservation>();
             ReservationRepository.GetReservationsByHostID(hostID, reservations);
 
-            if (existingReservationID != 0)
-            {
-                return existingReservationID;
-            }
+            if (existingReservationID != 0) {return existingReservationID;}
 
             //If host has no reservations, return reservation ID of 1
-            if (reservations.Data.Count == 0)
-            {
-                return 1;
-            }
+            if (reservations.Data.Count == 0) {return 1;}
+
             return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
         public decimal CalculateTotal(Host host, DateTime startDate, DateTime endDate)

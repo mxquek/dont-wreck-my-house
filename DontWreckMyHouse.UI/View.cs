@@ -173,12 +173,14 @@ namespace DontWreckMyHouse.UI
             {
                 _IO.PrintLine("0. Exit");
                 int reservationID = _IO.ReadInt("Select a reservation by its ID: ");
+                
                 if (reservationID == 0)
                 {
                     result.Success = false;
                     result.Message = "Exiting Reservation Selection...";
                     break;
                 }
+                
                 result.Data = reservations.Where(reservation => reservation.ID == reservationID).FirstOrDefault();
                 if (result.Data == null)
                 {

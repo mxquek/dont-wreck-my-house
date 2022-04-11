@@ -65,6 +65,11 @@ namespace DontWreckMyHouse.DAL
             Guest result = new Guest();
 
             string[] fields = data.Split(",");
+            if (fields.Length != 6)
+            {
+                return null;
+            }
+
             result.ID = int.Parse(fields[0]);
             result.FirstName = fields[1];
             result.LastName = fields[2];

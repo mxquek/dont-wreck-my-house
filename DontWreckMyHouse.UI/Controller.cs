@@ -299,7 +299,6 @@ namespace DontWreckMyHouse.UI
         }
 
         //Helper Methods
-        
         public void DisplayHostReservations(Host host, Result<List<Reservation>> result, DateTime startingViewDate = new DateTime(), Guest guest = null)
         {
             if (host == null)

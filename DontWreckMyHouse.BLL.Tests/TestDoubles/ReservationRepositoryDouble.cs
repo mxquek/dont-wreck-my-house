@@ -30,8 +30,8 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
                 result.Success = true;
             }
             else { return; }
-            result.Data = result.Data.OrderBy(reservation => reservation.StartDate).ToList();
 
+            result.Data = result.Data.OrderBy(reservation => reservation.StartDate).ToList();
             return;
         }
 

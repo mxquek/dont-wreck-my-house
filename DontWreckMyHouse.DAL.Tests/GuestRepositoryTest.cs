@@ -47,10 +47,19 @@ namespace DontWreckMyHouse.DAL.Tests
         }
 
         [Test]
-        public void Deserialize_StringGuest_ReturnsGuest()
+        public void Deserialize_ValidStringGuest_ReturnsGuest()
         {
             Guest expected = new Guest(GUEST1);
             string stringGuest = "1,John,Smith,JohnSmith@gmail.com,(333) 333-3333,TX";
+            Guest actual = guestRepository.Deserialize(stringGuest);
+
+            Assert.AreEqual(expected, actual);
+        }
+        [Test]
+        public void Deserialize_InvalidStringGuest_ReturnsGuest()
+        {
+            Guest expected = null;
+            string stringGuest = "1,John,Smith,JohnSmith@gmail.com,(333) 333-3333,TX,Extra";
             Guest actual = guestRepository.Deserialize(stringGuest);
 
             Assert.AreEqual(expected, actual);
