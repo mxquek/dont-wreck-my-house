@@ -73,28 +73,13 @@ namespace DontWreckMyHouse.DAL
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
-
             GetReservationsByHostID(hostID, all);
-            if (all.Success == false)
-            {
-                reservation.Success = false;
-                return;
-            }
 
-            if(all.Data.Where(r => r.Equals(reservation.Data)).ToList().Count == 0)
-            {
-                reservation.Success = false;
-                reservation.Message = $"Reservation ID {reservation.Data.ID} was not found. Exiting...";
-                return;
-            }
-            else
-            {
-                all.Data.Remove(reservation.Data);
-                WriteToFile(all.Data, hostID);
+            all.Data.Remove(reservation.Data);
+            WriteToFile(all.Data, hostID);
 
-                reservation.Success = true;
-                reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
-            }
+            reservation.Success = true;
+            reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
             
             return;
         }

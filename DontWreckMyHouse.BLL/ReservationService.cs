@@ -60,7 +60,26 @@ namespace DontWreckMyHouse.BLL
                 return;
             }
 
-            ReservationRepository.Remove(reservation, host.ID);
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+
+            ReservationRepository.GetReservationsByHostID(host.ID, all);
+            if (all.Success == false)
+            {
+                reservation.Success = false;
+                return;
+            }
+
+            if (all.Data.Where(r => r.Equals(reservation.Data)).ToList().Count == 0)
+            {
+                reservation.Success = false;
+                reservation.Message = $"Reservation ID {reservation.Data.ID} was not found. Exiting...";
+                return;
+            }
+            else
+            {
+                ReservationRepository.Remove(reservation, host.ID);
+            }
             return;
         }
         public void Edit(Result<Reservation> updatedReservation, Host host)
