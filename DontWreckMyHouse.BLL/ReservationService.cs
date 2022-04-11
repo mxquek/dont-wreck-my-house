@@ -111,10 +111,26 @@ namespace DontWreckMyHouse.BLL
         //Validation
         public void ValidateReservation (Result<Reservation> result, Host host)
         {
+            ValidateNulls(result, host);
             ValidateHost(result, host);
             ValidateGuestID(result);
             ValidateReservationDates(result,host.ID);
         }
+
+        private void ValidateNulls(Result<Reservation> result, Host host)
+        {
+            if(host == null)
+            {
+                result.Success = false;
+                result.Message = "Host cannot be empty";
+            }
+            if(result.Data == null)
+            {
+                result.Success = false;
+                result.Message = "Reservation cannot be empty";
+            }
+        }
+
         private void ValidateGuestID(Result<Reservation> result)
         {
             if (GuestRepository.FindByID(result.Data.ID) == null)
