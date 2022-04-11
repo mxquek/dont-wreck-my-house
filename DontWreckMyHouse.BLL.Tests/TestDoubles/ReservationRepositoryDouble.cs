@@ -104,59 +104,31 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
-
             GetReservationsByHostID(hostID, all);
-            if (all.Success == false)
-            {
-                reservation.Success = false;
-                return;
-            }
 
-            if (all.Data.Where(r => r.Equals(reservation.Data)).ToList().Count == 0)
-            {
-                reservation.Success = false;
-                reservation.Message = $"Reservation ID {reservation.Data.ID} was not found. Exiting...";
-                return;
-            }
-            else
-            {
-                all.Data.Remove(reservation.Data);
-                WriteToFile(all.Data, hostID);
+            all.Data.Remove(reservation.Data);
+            WriteToFile(all.Data, hostID);
 
-                reservation.Success = true;
-                reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
-            }
+            reservation.Success = true;
+            reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
 
             return;
         }
-        public void Edit(Result<Reservation> updatedReservation, string hostID)
+        public void Edit(Result<Reservation> updatedReservation, string hostID, int targetIndex)
         {
             Result<List<Reservation>> all = new Result<List<Reservation>>();
             all.Data = new List<Reservation>();
 
             GetReservationsByHostID(hostID, all);
-            if (all.Success == false)
-            {
-                updatedReservation.Success = false;
-                return;
-            }
-            int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());
 
-            if (targetIndex == -1)
-            {
-                updatedReservation.Success = false;
-                updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} not found.";
-                return;
-            }
-            else
-            {
-                all.Data[targetIndex].StartDate = updatedReservation.Data.StartDate;
-                all.Data[targetIndex].EndDate = updatedReservation.Data.EndDate;
-                all.Data[targetIndex].Total = updatedReservation.Data.Total;
-                updatedReservation.Success = true;
-                updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} updated.";
-                WriteToFile(all.Data, hostID);
-            }
+            all.Data[targetIndex].StartDate = updatedReservation.Data.StartDate;
+            all.Data[targetIndex].EndDate = updatedReservation.Data.EndDate;
+            all.Data[targetIndex].Total = updatedReservation.Data.Total;
+
+            updatedReservation.Success = true;
+            updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} updated.";
+
+            WriteToFile(all.Data, hostID);
             return;
         }
 

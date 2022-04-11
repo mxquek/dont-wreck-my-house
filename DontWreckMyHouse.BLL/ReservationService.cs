@@ -90,7 +90,27 @@ namespace DontWreckMyHouse.BLL
                 return;
             }
 
-            ReservationRepository.Edit(updatedReservation, host.ID);
+            Result<List<Reservation>> all = new Result<List<Reservation>>();
+            all.Data = new List<Reservation>();
+
+            ReservationRepository.GetReservationsByHostID(host.ID, all);
+            if (all.Success == false)
+            {
+                updatedReservation.Success = false;
+                return;
+            }
+            int targetIndex = all.Data.IndexOf(all.Data.Where(r => r.ID == updatedReservation.Data.ID).FirstOrDefault());
+
+            if (targetIndex == -1)
+            {
+                updatedReservation.Success = false;
+                updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} not found.";
+                return;
+            }
+            else
+            {
+                ReservationRepository.Edit(updatedReservation, host.ID, targetIndex);
+            }
             return;
         }
 

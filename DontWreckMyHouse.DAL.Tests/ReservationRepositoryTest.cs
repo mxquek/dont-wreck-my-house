@@ -143,7 +143,7 @@ namespace DontWreckMyHouse.DAL.Tests
             actual.Data.EndDate = new DateTime(2022, 11, 14);
             actual.Data.Total = 125;
 
-            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID);
+            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID, 0);
             Assert.IsTrue(actual.Success);
 
             //Assuming GetReservationByHostID is functional
@@ -161,7 +161,7 @@ namespace DontWreckMyHouse.DAL.Tests
             Result<Reservation> actual = new Result<Reservation>();
             actual.Data = new Reservation();
 
-            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID);
+            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID,0);
             Assert.IsFalse(actual.Success);
 
             //Assuming GetReservationByHostID is functional
