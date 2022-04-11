@@ -94,7 +94,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             //Don't check for success, as an empty list is acceptable
 
             all.Data.Add(reservation.Data);
-            WriteToFile(all.Data, hostID);
+            //WriteToFile(all.Data, hostID);
 
             reservation.Success = true;
             reservation.Message = $"Reservation {reservation.Data.ID} added.";
@@ -107,7 +107,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             GetReservationsByHostID(hostID, all);
 
             all.Data.Remove(reservation.Data);
-            WriteToFile(all.Data, hostID);
+            //WriteToFile(all.Data, hostID);
 
             reservation.Success = true;
             reservation.Message = $"Reservation {reservation.Data.ID} successfully deleted.";
@@ -128,7 +128,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             updatedReservation.Success = true;
             updatedReservation.Message = $"Reservation {updatedReservation.Data.ID} updated.";
 
-            WriteToFile(all.Data, hostID);
+            //WriteToFile(all.Data, hostID);
             return;
         }
 

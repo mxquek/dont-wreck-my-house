@@ -118,23 +118,6 @@ namespace DontWreckMyHouse.DAL.Tests
         }
 
         [Test]
-        public void Remove_GivenNonexistentReservation_DoesNotRemoveReservation()
-        {
-            Result<Reservation> actual = new Result<Reservation>();
-            actual.Data = new Reservation();
-
-            reservationRepository.Remove(actual, HostRepositoryTest.HOST1.ID);
-            Assert.IsFalse(actual.Success);
-
-            //Assuming GetReservationByHostID is functional
-            Result<List<Reservation>> all = new Result<List<Reservation>>();
-            all.Data = new List<Reservation>();
-            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
-
-            Assert.IsFalse(all.Data.Any(r => r.Equals(actual.Data)));
-            Assert.AreEqual(all.Data.Count, 1);
-        }
-        [Test]
         public void Edit_GivenExistingReservation_EditsReservation()
         {
             Result<Reservation> actual = new Result<Reservation>();
@@ -152,24 +135,7 @@ namespace DontWreckMyHouse.DAL.Tests
             reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
 
             Assert.IsTrue(all.Data.Any(r => r.Equals(actual.Data)));
-            Assert.AreEqual(all.Data.Count, 1);
-        }
-
-        [Test]
-        public void Edit_GivenNonexistentReservation_DoesNotEditReservation()
-        {
-            Result<Reservation> actual = new Result<Reservation>();
-            actual.Data = new Reservation();
-
-            reservationRepository.Edit(actual, HostRepositoryTest.HOST1.ID,0);
-            Assert.IsFalse(actual.Success);
-
-            //Assuming GetReservationByHostID is functional
-            Result<List<Reservation>> all = new Result<List<Reservation>>();
-            all.Data = new List<Reservation>();
-            reservationRepository.GetReservationsByHostID(HostRepositoryTest.HOST1.ID, all);
-
-            Assert.IsFalse(all.Data.Any(r => r.Equals(actual.Data)));
+            Assert.IsFalse(all.Data.Any(r => r.Equals(ReservationRepositoryTest.H1R1)));
             Assert.AreEqual(all.Data.Count, 1);
         }
 

@@ -310,7 +310,6 @@ namespace DontWreckMyHouse.UI
             }
 
             _View.DisplayHeader($"{host.LastName}: {host.City}, {host.State}");
-
             result.Data = result.Data.OrderBy(reservation => reservation.StartDate)
                                                     .Where(reservation => reservation.StartDate >= startingViewDate).ToList();
             if (guest != null)
@@ -322,9 +321,9 @@ namespace DontWreckMyHouse.UI
             {
                 result.Success = false;
                 result.Message = $"{host.LastName} has no reservations on or after {startingViewDate:MM/dd/yyyy}.";
-                //_View.DisplayMessage(result.Message);
                 return;
             }
+            
             foreach (Reservation reservation in result.Data)
             {
                 Result<Guest> guestResult = _GuestService.FindByID(reservation.GuestID);
