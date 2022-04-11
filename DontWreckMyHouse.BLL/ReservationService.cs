@@ -115,7 +115,6 @@ namespace DontWreckMyHouse.BLL
             ValidateGuestID(result);
             ValidateReservationDates(result,host.ID);
         }
-
         private void ValidateGuestID(Result<Reservation> result)
         {
             if (GuestRepository.FindByID(result.Data.ID) == null)

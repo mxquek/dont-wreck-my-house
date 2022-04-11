@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
 
@@ -29,6 +30,16 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             File.Copy(Seed_Path, Test_Path, true);
         }
 
+        public Guest FindByID(int guestID)
+        {
+            Result<List<Guest>> all = GetAll();
+            if (all.Success == false)
+            {
+                return null;
+            }
+
+            return all.Data.FirstOrDefault(guest => guest.ID == guestID);
+        }
         public Result<List<Guest>> GetAll()
         {
             Result<List<Guest>> result = new Result<List<Guest>>();
@@ -65,7 +76,6 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             result.Success = true;
             return result;
         }
-
         public Guest Deserialize(string data)
         {
             Guest result = new Guest();
@@ -81,9 +91,5 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             return result;
         }
 
-        public Guest FindByID(int guestID)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
