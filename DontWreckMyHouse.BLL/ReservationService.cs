@@ -24,6 +24,7 @@ namespace DontWreckMyHouse.BLL
             {
                 result.Success = false;
                 result.Message = "Requested host does not exist";
+                return;
             }
 
             ReservationRepository.GetReservationsByHostID(hostID, result);
@@ -223,7 +224,7 @@ namespace DontWreckMyHouse.BLL
                 result.Message = "Reservation period overlaps with existing reservation. Dates must be during available dates.";
                 return;
             }
-            if (result.Data.EndDate < result.Data.EndDate)
+            if (result.Data.EndDate < result.Data.StartDate)
             {
                 result.Success = false;
                 result.Message = "End date must be after start date.";

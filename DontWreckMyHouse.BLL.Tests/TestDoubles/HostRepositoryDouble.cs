@@ -9,26 +9,7 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
 {
     public class HostRepositoryDouble : IHostRepository
     {
-        static string ProjectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName;
-        static string DAL_TEST_DIRECTORY = "DontWreckMyHouse.DAL.Tests";
-        static string DATA_DIRECTORY = Path.Combine(ProjectDirectory, DAL_TEST_DIRECTORY, "data");
-
-        const string SEED_DIRECTORY = "seed";
-        const string SEED_FILE = "testHostSeed.csv";
-
-        const string TEST_DIRECTORY = "test";
-        const string TEST_FILE = "testHosts.csv";
-
-        string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
-        private string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
-        public HostRepositoryDouble()
-        {
-            if (!Directory.Exists(TEST_DIRECTORY))
-            {
-                Directory.CreateDirectory(Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY));
-            }
-            File.Copy(Seed_Path, Test_Path, true);
-        }
+        public HostRepositoryDouble() { }
 
         public Host FindByID(string hostID)
         {
@@ -45,33 +26,8 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             Result<List<Host>> result = new Result<List<Host>>();
             result.Data = new List<Host>();
 
-            if (!File.Exists(Test_Path))
-            {
-                result.Success = false;
-                return result;
-            }
-
-            try
-            {
-                using (StreamReader sr = new StreamReader(Test_Path))
-                {
-                    string currentLine = sr.ReadLine();
-                    if (currentLine != null)
-                    {
-                        currentLine = sr.ReadLine();
-                    }
-                    while (currentLine != null)
-                    {
-                        Host record = Deserialize(currentLine.Trim());
-                        result.Data.Add(record);
-                        currentLine = sr.ReadLine();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Could not read Hosts", ex);
-            }
+            result.Data.Add(new Host("GUID-1111", "Doe", "JaneDoe@gmail.com", "(111) 111-1111", "1212 Everlane Rd", "Buffalo", "NY", "14201", 25, 50));
+            result.Data.Add(new Host("GUID-2222", "Well", "ChristinaWell@yahoo.com", "(222) 222-2222", "4444 Oceanside Ave", "Plano", "TX", "75252", 10, 20));
 
             result.Success = true;
             return result;

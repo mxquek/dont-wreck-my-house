@@ -10,7 +10,12 @@ namespace DontWreckMyHouse.BLL.Tests
 {
     public class ReservationServiceTest
     {
-        ReservationService reservationService = new ReservationService(new HostRepositoryDouble(), new GuestRepositoryDouble(), new ReservationRepositoryDouble());
+        ReservationService reservationService;
+        [SetUp]
+        public void Setup()
+        {
+            reservationService = new ReservationService(new HostRepositoryDouble(), new GuestRepositoryDouble(), new ReservationRepositoryDouble());
+        }
 
         [Test]
         public void GetReservationsByHostID_GivenExistingHostID_ReturnsListOfReservationsUnderHost()
@@ -19,6 +24,7 @@ namespace DontWreckMyHouse.BLL.Tests
             actual.Data = new List<Reservation>();
             reservationService.GetReservationsByHostID(actual, HostRepositoryTest.HOST1.ID);
 
+            Assert.AreEqual(1, actual.Data.Count);
             Assert.IsTrue(actual.Success);
         }
 
@@ -29,6 +35,18 @@ namespace DontWreckMyHouse.BLL.Tests
             actual.Data = new List<Reservation>();
             reservationService.GetReservationsByHostID(actual, "NonexistentHostID");
 
+            Assert.AreEqual(0, actual.Data.Count);
+            Assert.IsFalse(actual.Success);
+        }
+
+        [Test]
+        public void GetReservationsByHostID_GivenHostWithNoReservations_ReturnsEmptyList()
+        {
+            Result<List<Reservation>> actual = new Result<List<Reservation>>();
+            actual.Data = new List<Reservation>();
+            reservationService.GetReservationsByHostID(actual, HostRepositoryTest.HOST2.ID);
+
+            Assert.AreEqual(0, actual.Data.Count);
             Assert.IsFalse(actual.Success);
         }
 
@@ -64,7 +82,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Host host = HostRepositoryTest.HOST1;
 
             Result<Reservation> actual = new Result<Reservation>();
-            actual.Data = ReservationRepositoryTest.H1R1;
+            actual.Data = new Reservation(ReservationRepositoryTest.H1R1);
             actual.Data.GuestID = 1000;
 
             reservationService.Add(actual, host);
@@ -78,7 +96,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Host host = HostRepositoryTest.HOST1;
 
             Result<Reservation> actual = new Result<Reservation>();
-            actual.Data = ReservationRepositoryTest.H1R1;
+            actual.Data = new Reservation(ReservationRepositoryTest.H1R1);
             actual.Data.GuestID = -1000;
 
             reservationService.Add(actual, host);
@@ -92,7 +110,7 @@ namespace DontWreckMyHouse.BLL.Tests
             Host host = HostRepositoryTest.HOST1;
 
             Result<Reservation> actual = new Result<Reservation>();
-            actual.Data = ReservationRepositoryTest.H1R2;
+            actual.Data = new Reservation(ReservationRepositoryTest.H1R2);
 
             reservationService.Add(actual, host);
 
@@ -233,7 +251,7 @@ namespace DontWreckMyHouse.BLL.Tests
             result.Data.EndDate = result.Data.StartDate;
             result.Data.StartDate = temp;
 
-            Host host = HostRepositoryTest.HOST1;
+            Host host = new Host(HostRepositoryTest.HOST1);
 
             reservationService.ValidateReservation(result, host);
             Assert.IsFalse(result.Success);
@@ -243,9 +261,10 @@ namespace DontWreckMyHouse.BLL.Tests
         {
             Result<Reservation> result = new Result<Reservation>();
             result.Data = new Reservation(ReservationRepositoryTest.H1R1);
-            
+            result.Data.ID = 2;
 
-            Host host = HostRepositoryTest.HOST2;
+
+            Host host = new Host(HostRepositoryTest.HOST1);
 
             reservationService.ValidateReservation(result, host);
             Assert.IsFalse(result.Success);

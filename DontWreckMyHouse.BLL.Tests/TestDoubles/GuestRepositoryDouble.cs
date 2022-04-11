@@ -4,30 +4,15 @@ using System.IO;
 using System.Linq;
 using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
+using DontWreckMyHouse.DAL.Tests;
 
 namespace DontWreckMyHouse.BLL.Tests.TestDoubles
 {
     public class GuestRepositoryDouble : IGuestRepository
     {
-        static string ProjectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.Parent.FullName;
-        static string DAL_TEST_DIRECTORY = "DontWreckMyHouse.DAL.Tests";
-        static string DATA_DIRECTORY = Path.Combine(ProjectDirectory, DAL_TEST_DIRECTORY, "data");
 
-        const string SEED_DIRECTORY = "seed";
-        const string SEED_FILE = "testGuestSeed.csv";
-
-        const string TEST_DIRECTORY = "test";
-        const string TEST_FILE = "testGuests.csv";
-
-        string Seed_Path = Path.Combine(DATA_DIRECTORY, SEED_DIRECTORY, SEED_FILE);
-        private string Test_Path = Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY, TEST_FILE);
         public GuestRepositoryDouble()
         {
-            if (!Directory.Exists(TEST_DIRECTORY))
-            {
-                Directory.CreateDirectory(Path.Combine(DATA_DIRECTORY, TEST_DIRECTORY));
-            }
-            File.Copy(Seed_Path, Test_Path, true);
         }
 
         public Guest FindByID(int guestID)
@@ -45,33 +30,8 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             Result<List<Guest>> result = new Result<List<Guest>>();
             result.Data = new List<Guest>();
 
-            if (!File.Exists(Test_Path))
-            {
-                result.Success = false;
-                return result;
-            }
-
-            try
-            {
-                using (StreamReader sr = new StreamReader(Test_Path))
-                {
-                    string currentLine = sr.ReadLine();
-                    if (currentLine != null)
-                    {
-                        currentLine = sr.ReadLine();
-                    }
-                    while (currentLine != null)
-                    {
-                        Guest record = Deserialize(currentLine.Trim());
-                        result.Data.Add(record);
-                        currentLine = sr.ReadLine();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Could not read guests", ex);
-            }
+            result.Data.Add(new Guest(1, "John", "Smith", "JohnSmith@gmail.com", "(333) 333-3333", "TX"));
+            result.Data.Add(new Guest(2, "Terry", "Bob", "TBob@yahoo.com", "(444) 444-4444", "NV"));
 
             result.Success = true;
             return result;
