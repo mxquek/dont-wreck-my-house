@@ -12,6 +12,17 @@ namespace DontWreckMyHouse.DAL
             _Path = path;
         }
 
+        public Guest FindByID(int guestID)
+        {
+            Result<List<Guest>> all = GetAll();
+            if (all.Success == false)
+            {
+                return null;
+            }
+
+            return all.Data.FirstOrDefault(guest => guest.ID == guestID);
+        }
+
         public Result<List<Guest>> GetAll()
         {
             Result<List<Guest>> result = new Result<List<Guest>>();

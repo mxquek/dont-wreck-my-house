@@ -18,10 +18,9 @@ namespace DontWreckMyHouse.BLL
         }
 
         //Main Functions
-        public void GetReservationsByHostID(string hostID, Result<List<Reservation>> result)
+        public void GetReservationsByHostID(Result<List<Reservation>> result, string hostID)
         {
-            Result<List<Host>> hosts = HostRepository.GetAll();
-            if(!hosts.Data.Any(host => host.ID == hostID))
+            if (HostRepository.FindByID(hostID) == null)
             {
                 result.Success = false;
                 result.Message = "Requested host does not exist";
@@ -39,61 +38,59 @@ namespace DontWreckMyHouse.BLL
                 result.Success = false;
                 result.Message = "No reservations found for the host.";
             }
+
             return;
         }
-        public void Add(Result<Reservation> reservation, string hostID)
+        public void Add(Result<Reservation> reservation, Host host)
         {
-            ReservationRepository.Add(reservation, hostID);
+            ValidateReservation(reservation, host);
+            if(reservation.Success == false)
+            {
+                return;
+            }
+
+            ReservationRepository.Add(reservation, host.ID);
             return;
         }
-        public void Remove(Result<Reservation> reservation, string hostID)
+        public void Remove(Result<Reservation> reservation, Host host)
         {
-            ReservationRepository.Remove(reservation, hostID);
+            ValidateReservation(reservation, host);
+            ReservationRepository.Remove(reservation, host.ID);
             return;
         }
-        public void Edit(Result<Reservation> updatedReservation, string hostID)
+        public void Edit(Result<Reservation> updatedReservation, Host host)
         {
-            ReservationRepository.Edit(updatedReservation, hostID);
+            ValidateReservation(updatedReservation, host);
+            if (updatedReservation.Success == false)
+            {
+                return;
+            }
+
+            ReservationRepository.Edit(updatedReservation, host.ID);
 
             return;
         }
 
         //Supporting Methods
-        public void Make(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int oldReservationID = 0)
-        {
-            Validate(result, host, guest, startDate, endDate, oldReservationID);
-            if (result.Success == false)
-            {
-                return;
-            }
-            if (oldReservationID == 0)
-            {
-                result.Data.ID = GetNextReservationID(host.ID);
-            }
-            else
-            {
-                result.Data.ID = oldReservationID;
-            }
-            result.Data.StartDate = startDate;
-            result.Data.EndDate = endDate;
-            result.Data.GuestID = guest.ID;
-            result.Data.Total = CalculateTotal(host, startDate, endDate);
-            return;
-        }
-        private int GetNextReservationID(string hostID)
+        public int GetNextReservationID(string hostID, int existingReservationID = 0)
         {
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
             reservations.Data = new List<Reservation>();
             ReservationRepository.GetReservationsByHostID(hostID, reservations);
 
+            if (existingReservationID != 0)
+            {
+                return existingReservationID;
+            }
+
             //If host has no reservations, return reservation ID of 1
-            if(reservations.Data.Count == 0)
+            if (reservations.Data.Count == 0)
             {
                 return 1;
             }
             return reservations.Data.OrderBy(r => r.ID).Last().ID + 1;
         }
-        private decimal CalculateTotal(Host host, DateTime startDate, DateTime endDate)
+        public decimal CalculateTotal(Host host, DateTime startDate, DateTime endDate)
         {
             decimal total = 0;
             DateTime d = startDate;
@@ -112,60 +109,60 @@ namespace DontWreckMyHouse.BLL
         }
 
         //Validation
-        private void Validate(Result<Reservation> result, Host host, Guest guest, DateTime startDate, DateTime endDate, int reservationID = 0)
+        public void ValidateReservation (Result<Reservation> result, Host host)
         {
-            ValidateNulls(host, guest, startDate, endDate, result);
-            ValidateReservationPeriod(host.ID,startDate,endDate,result,reservationID);
-
-            return;
+            ValidateHost(result, host);
+            ValidateGuestID(result);
+            ValidateReservationDates(result,host.ID);
         }
-        private void ValidateNulls(Host host, Guest guest, DateTime startDate, DateTime endDate, Result<Reservation> result)
+
+        private void ValidateGuestID(Result<Reservation> result)
         {
-            if(host == null)
+            if (GuestRepository.FindByID(result.Data.ID) == null)
             {
-                result.Message = "Must have a host";
                 result.Success = false;
-                return;
-            }
-            else if (guest == null)
-            {
-                result.Message = "Must have a guest";
-                result.Success = false;
-                return;
-            }
-            else if (startDate == null)
-            {
-                result.Message = "Must have a start date";
-                result.Success = false;
-                return;
-            }
-            else if (endDate == null)
-            {
-                result.Message = "Must have an end date";
-                result.Success = false;
-                return;
+                result.Message = "Guest does not exist";
             }
             else
             {
-                result.Success = true;
+                return;
             }
         }
-        private void ValidateReservationPeriod(string hostID, DateTime startDate, DateTime endDate, Result<Reservation> result, int reservationID = 0)
+        private void ValidateHost(Result<Reservation> result, Host host)
+        {
+            if(host == null)
+            {
+                result.Success = false;
+                result.Message = "Host does not exist";
+            }
+
+            if (HostRepository.FindByID(host.ID) == null)
+            {
+                result.Success = false;
+                result.Message = "Host does not exist";
+            }
+            else
+            {
+                return;
+            }
+        }
+        private void ValidateReservationDates(Result<Reservation> result, string hostID)
         {
             Result<List<Reservation>> reservations = new Result<List<Reservation>>();
             reservations.Data = new List<Reservation>();
-            GetReservationsByHostID(hostID, reservations);
-            if (reservations.Data.Any(r => ((startDate >= r.StartDate
-                                        && startDate <= r.EndDate)
-                                        || (endDate >= r.StartDate
-                                        && endDate <= r.EndDate))
-                                        && r.ID != reservationID))
+            GetReservationsByHostID(reservations, hostID);
+
+            if (reservations.Data.Any(r => ((result.Data.StartDate >= r.StartDate
+                                        && result.Data.StartDate <= r.EndDate)
+                                        || (result.Data.EndDate >= r.StartDate
+                                        && result.Data.EndDate <= r.EndDate))
+                                        && r.ID != result.Data.ID))
             {
                 result.Success = false;
                 result.Message = "Reservation period overlaps with existing reservation. Dates must be during available dates.";
                 return;
             }
-            if(endDate < startDate)
+            if (result.Data.EndDate < result.Data.EndDate)
             {
                 result.Success = false;
                 result.Message = "End date must be after start date.";
@@ -174,6 +171,5 @@ namespace DontWreckMyHouse.BLL
             result.Success = true;
         }
 
-        
     }
 }

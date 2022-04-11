@@ -80,5 +80,10 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
 
             return result;
         }
+
+        public Guest FindByID(int guestID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -87,7 +87,8 @@ namespace DontWreckMyHouse.UI
             Result<Host> result = new Result<Host>();
             if (hosts == null || hosts.Count == 0)
             {
-                _IO.Error("No hosts found");
+                result.Success = false;
+                result.Message = "No hosts found";
                 return result;
             }
 
@@ -109,7 +110,7 @@ namespace DontWreckMyHouse.UI
             if (index <= 0)
             {
                 result.Success = false;
-                result.Message = "Exiting Host Selection...";
+                result.Message = "\nExiting Host Selection...";
                 return result;
             }
             result.Data = hosts[index - 1];
@@ -147,7 +148,7 @@ namespace DontWreckMyHouse.UI
             if(index == 0)
             {
                 result.Success = false;
-                result.Message = "Exiting Guest Selection...";
+                result.Message = "\nExiting Guest Selection...";
             }
             result.Data = guests[index - 1];
             result.Success = true;

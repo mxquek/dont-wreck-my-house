@@ -83,5 +83,10 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
 
             return result;
         }
+
+        public Host FindByID(string hostID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

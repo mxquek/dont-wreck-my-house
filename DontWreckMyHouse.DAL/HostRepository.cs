@@ -1,5 +1,6 @@
 ﻿using DontWreckMyHouse.Core.Interfaces;
 using DontWreckMyHouse.Core.Models;
+using System.Linq;
 
 namespace DontWreckMyHouse.DAL
 {
@@ -10,6 +11,17 @@ namespace DontWreckMyHouse.DAL
         public HostRepository(string path)
         {
             _Path = path;
+        }
+
+        public Host FindByID(string hostID)
+        {
+            Result<List<Host>> all = GetAll();
+            if(all.Success == false)
+            {
+                return null;
+            }
+
+            return all.Data.FirstOrDefault(host => host.ID == hostID);
         }
 
         public Result<List<Host>> GetAll()
