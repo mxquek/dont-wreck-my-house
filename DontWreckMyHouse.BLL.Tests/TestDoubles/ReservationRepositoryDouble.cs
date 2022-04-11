@@ -91,7 +91,6 @@ namespace DontWreckMyHouse.BLL.Tests.TestDoubles
             all.Data = new List<Reservation>();
 
             GetReservationsByHostID(hostID, all);
-            //Don't check for success, as an empty list is acceptable
 
             all.Data.Add(reservation.Data);
             //WriteToFile(all.Data, hostID);

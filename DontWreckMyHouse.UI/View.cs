@@ -84,6 +84,7 @@ namespace DontWreckMyHouse.UI
 
         public Result<Host> ChooseHost(List<Host> hosts)
         {
+            DisplayHeader("Choose Host");
             Result<Host> result = new Result<Host>();
             if (hosts == null || hosts.Count == 0)
             {
@@ -120,6 +121,7 @@ namespace DontWreckMyHouse.UI
         }
         public Result<Guest> ChooseGuest(List<Guest> guests)
         {
+            DisplayHeader("Choose Guest");
             Result<Guest> result = new Result<Guest>();
 
             if(guests.Count == 0 || guests == null)
@@ -149,6 +151,7 @@ namespace DontWreckMyHouse.UI
             {
                 result.Success = false;
                 result.Message = "\nExiting Guest Selection...";
+                return result;
             }
             result.Data = guests[index - 1];
             result.Success = true;
